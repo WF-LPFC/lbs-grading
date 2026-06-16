@@ -1,1218 +1,846 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LBS Quarterly Scorecard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zollege KPI Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0e0e0c;--ink2:#4a4a46;--ink3:#8a8a84;
-  --paper:#faf8f4;--paper2:#f2efe9;--paper3:#e8e4dc;
-  --rule:#d8d3c8;--rule2:#c4bfb4;
-  --blue:#1a5fa8;--blue-l:#e8f0fb;--blue-m:#c0d4f4;
-  --green:#2d6a1f;--green-l:#e6f3e0;
-  --amber:#8a5200;--amber-l:#fdf0d8;
-  --red:#8a1f1f;--red-l:#fde8e8;
-  --teal:#0d6655;--teal-l:#e0f4f0;
-  --r:6px;--r-lg:12px;
-  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
+:root {
+  --navy: #071e3d; --navy2: #0d2d52; --navy3: #142f52;
+  --blue: #1565C0; --blue2: #1976D2;
+  --sky: #29B6F6; --sky-pale: #e3f2fd; --sky-mid: #b3e0f9;
+  --white: #ffffff; --off: #f5f8fc; --surface: #eef4fb;
+  --border: rgba(21,101,192,0.13); --border2: rgba(21,101,192,0.22);
+  --text: #071e3d; --muted: #607d9a; --muted2: #8fa8c0;
+  --green: #1b5e20; --green-bg: #e8f5e9; --green-mid: #2e7d32; --green-light: #a5d6a7;
+  --amber: #bf360c; --amber-bg: #fff3e0; --amber-mid: #e65100; --amber-light: #ffcc80;
+  --red: #b71c1c; --red-bg: #ffebee; --red-mid: #c62828; --red-light: #ef9a9a;
+  --shadow: 0 2px 10px rgba(7,30,61,0.07); --shadow-lg: 0 6px 28px rgba(7,30,61,0.12);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; background: #edf2f9; color: var(--text); min-height: 100vh; }
 
-/* ── Header ── */
-.header{background:var(--ink);color:#fff;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
-.header-logo{font-family:'DM Serif Display',serif;font-size:17px;letter-spacing:.3px}
-.header-right{display:flex;align-items:center;gap:12px}
-.header-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8)}
-.platform-select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.platform-select option{background:#1a1a18;color:#fff}
+/* ── STICKY HEADER ── */
+.header { background: var(--navy); padding: 0 1.75rem; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 18px rgba(0,0,0,0.28); }
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo { font-family: 'Barlow Condensed', sans-serif; font-size: 21px; font-weight: 700; letter-spacing: 3px; color: #fff; }
+.hdiv { width: 1px; height: 22px; background: rgba(255,255,255,0.18); }
+.htitle { font-size: 12px; color: rgba(255,255,255,0.55); letter-spacing: 0.4px; }
+.hright { display: flex; align-items: center; gap: 12px; }
+.hperiod { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--sky); }
+.hupdated { font-size: 10px; color: rgba(255,255,255,0.35); }
 
-/* ── Setup screen ── */
-.setup-screen{max-width:480px;margin:80px auto;padding:0 24px;text-align:center}
-.setup-logo{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:8px}
-.setup-sub{color:var(--ink3);font-size:15px;margin-bottom:40px;line-height:1.6}
-.setup-card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);padding:32px;box-shadow:var(--shadow);text-align:left}
-.setup-label{font-size:12px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
-.setup-select{width:100%;padding:10px 14px;border:1.5px solid var(--rule2);border-radius:var(--r);font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;cursor:pointer;margin-bottom:20px}
-.setup-select:focus{outline:none;border-color:var(--blue)}
-.setup-quarter{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.setup-quarter select{padding:10px 14px;border:1.5px solid var(--rule2);border-radius:var(--r);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff}
-.setup-quarter select:focus{outline:none;border-color:var(--blue)}
-.btn-start{width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .15s}
-.btn-start:hover{background:#2a2a28}
-.existing-note{margin-top:16px;padding:12px;background:var(--blue-l);border-radius:var(--r);font-size:12px;color:var(--blue);display:none}
+/* ── HEALTH STRIP ── */
+.health-strip { background: var(--navy2); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 8px 1.75rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; position: sticky; top: 58px; z-index: 190; }
+.hs-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-right: 4px; white-space: nowrap; }
+.hs-pill { display: inline-flex; align-items: center; gap: 4px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+.hs-pill.green { background: rgba(46,125,50,0.25); color: #81c784; border: 1px solid rgba(46,125,50,0.4); }
+.hs-pill.amber { background: rgba(230,81,0,0.25); color: #ffb74d; border: 1px solid rgba(230,81,0,0.4); }
+.hs-pill.red   { background: rgba(198,40,40,0.25); color: #ef9a9a; border: 1px solid rgba(198,40,40,0.4); }
+.hs-pill.none  { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.1); }
+.hs-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.hs-pill.green .hs-dot { background: #81c784; }
+.hs-pill.amber .hs-dot { background: #ffb74d; }
+.hs-pill.red   .hs-dot { background: #ef9a9a; }
 
-/* ── Scorecard ── */
-.scorecard-wrap{max-width:860px;margin:0 auto;padding:32px 24px 80px}
-.scorecard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px}
-.scorecard-identity h1{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
-.scorecard-identity .quarter-tag{font-size:13px;color:var(--ink3)}
-.score-dial{text-align:right}
-.dial-value{font-family:'DM Serif Display',serif;font-size:48px;line-height:1;color:var(--ink)}
-.dial-max{font-size:14px;color:var(--ink3);margin-top:2px}
-.dial-bar{width:180px;height:6px;background:var(--paper3);border-radius:3px;margin-top:8px;overflow:hidden}
-.dial-fill{height:100%;border-radius:3px;background:var(--blue);transition:width .4s}
+/* ── MAIN ── */
+.main { padding: 1.25rem 1.75rem 3rem; max-width: 1440px; margin: 0 auto; }
 
-/* Section card */
-.section-card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.section-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none;transition:background .12s}
-.section-head:hover{background:var(--paper2)}
-.section-head-left{display:flex;align-items:center;gap:10px}
-.section-num{width:28px;height:28px;border-radius:50%;background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ink2)}
-.section-title{font-size:15px;font-weight:600}
-.section-wt{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:4px}
-.wt-high{background:var(--blue-l);color:var(--blue)}
-.wt-med{background:var(--paper3);color:var(--ink2)}
-.wt-low{background:var(--paper2);color:var(--ink3)}
-.section-head-right{display:flex;align-items:center;gap:10px}
-.section-pts{font-family:'DM Serif Display',serif;font-size:20px;color:var(--blue)}
-.section-pts-max{font-size:12px;color:var(--ink3)}
-.section-arrow{font-size:14px;color:var(--ink3);transition:transform .2s}
-.section-arrow.open{transform:rotate(180deg)}
-.section-body{padding:0 20px 4px;border-top:1px solid var(--rule)}
+/* ── CONTROLS ── */
+.controls-bar { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ctrl-group { display: flex; align-items: center; gap: 5px; }
+.ctrl-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted2); white-space: nowrap; }
+.vdiv { width: 1px; height: 26px; background: var(--border2); }
+.btn-row { display: flex; gap: 3px; flex-wrap: wrap; }
+.pbtn { font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 5px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.13s; white-space: nowrap; }
+.pbtn:hover { background: var(--sky-pale); color: var(--blue); border-color: var(--blue); }
+.pbtn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.mtoggle { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.4px; padding: 4px 9px; border-radius: 5px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.13s; position: relative; }
+.mtoggle:hover { background: var(--sky-pale); color: var(--blue); border-color: var(--blue); }
+.mtoggle.sel { background: var(--blue); color: #fff; border-color: var(--blue); }
+.mtoggle.latest::after { content: '●'; position: absolute; top: -3px; right: -3px; font-size: 6px; color: var(--sky); }
 
-/* Subgroup */
-.subgroup{margin:12px 0}
-.subgroup-name{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.7px;padding:6px 0;border-bottom:1px dashed var(--rule);margin-bottom:4px}
+/* ── ROLLING 3-MO BAND ── */
+.r3-band { background: var(--navy); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow-lg); }
+.r3-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.85rem; }
+.r3-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.r3-range { font-size: 11px; color: var(--sky); font-weight: 500; }
+.r3-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 0; }
+.r3-item { text-align: center; padding: 0 0.75rem; border-right: 1px solid rgba(255,255,255,0.09); }
+.r3-item:last-child { border-right: none; }
+.r3-lbl { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.r3-val { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; color: #fff; line-height: 1; }
+.r3-vs { font-size: 10px; margin-top: 3px; font-weight: 600; }
+.r3-vs.up { color: #81c784; }
+.r3-vs.dn { color: #ef9a9a; }
+.r3-vs.fl { color: rgba(255,255,255,0.35); }
+.r3-sub { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 1px; }
 
-/* Objective row */
-.obj-row{padding:12px 0;border-bottom:1px solid var(--paper2)}
-.obj-row:last-child{border-bottom:none}
-.obj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:8px}
-.obj-label{font-size:13px;line-height:1.5;flex:1;color:var(--ink)}
-.score-row{display:flex;gap:5px;flex-shrink:0}
-.s-btn{width:36px;height:36px;border-radius:var(--r);border:1.5px solid var(--rule2);background:#fff;cursor:pointer;font-size:13px;font-weight:700;color:var(--ink3);transition:all .12s;font-family:'DM Sans',sans-serif}
-.s-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l);transform:translateY(-1px)}
-.s-btn.sel-1{background:var(--red-l);border-color:#e05050;color:var(--red)}
-.s-btn.sel-2{background:var(--amber-l);border-color:#d08030;color:var(--amber)}
-.s-btn.sel-3{background:var(--blue-l);border-color:#4090d0;color:var(--blue)}
-.s-btn.sel-4{background:var(--green-l);border-color:#50a040;color:var(--green)}
-.s-btn.sel-5{background:var(--teal-l);border-color:#20a080;color:var(--teal)}
-.criteria-bar{display:flex;gap:8px;margin-bottom:8px}
-.criteria-pill{flex:1;padding:5px 8px;border-radius:var(--r);font-size:11px;line-height:1.4}
-.criteria-1{background:var(--red-l);color:var(--red);border-left:3px solid #e05050}
-.criteria-5{background:var(--teal-l);color:var(--teal);border-left:3px solid #20a080}
-.criteria-label{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
-.obj-comment{width:100%}
-.comment-in{width:100%;padding:6px 10px;border:1.5px solid var(--rule);border-radius:var(--r);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;height:40px;transition:border-color .12s;background:var(--paper)}
-.comment-in:focus{outline:none;border-color:var(--blue);height:64px;background:#fff}
+/* ── SECTION DIVIDERS ── */
+.sec { display: flex; align-items: center; gap: 10px; margin: 1.25rem 0 0.7rem; }
+.sec-line { flex: 1; height: 1px; background: var(--border2); }
+.sec-title { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted2); white-space: nowrap; }
 
-/* Category bar summary */
-.cat-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px}
-.cat-bar-item{background:#fff;border:1px solid var(--rule);border-radius:var(--r);padding:10px;text-align:center}
-.cat-bar-name{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
-.cat-bar-score{font-size:16px;font-weight:700;font-family:'DM Serif Display',serif;margin-bottom:4px}
-.cat-bar-track{height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
-.cat-bar-fill{height:100%;border-radius:2px;background:var(--blue)}
+/* ── KPI CARDS WITH SPARKLINE ── */
+.kgrid { display: grid; gap: 9px; }
+.g4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.g8 { grid-template-columns: repeat(8, minmax(0,1fr)); }
 
-/* History strip */
-.history-strip{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:20px}
-.history-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
-.history-bars{display:flex;align-items:flex-end;gap:8px;height:48px}
-.h-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.h-bar{border-radius:3px 3px 0 0;background:var(--blue-m);width:100%;transition:background .2s;min-height:3px}
-.h-bar.current{background:var(--blue)}
-.h-period{font-size:9px;color:var(--ink3);text-align:center}
-.h-score{font-size:10px;font-weight:700;color:var(--ink2);text-align:center}
+.kcard { background: var(--white); border: 1px solid var(--border); border-radius: 9px; padding: 12px 14px 10px; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.13s, box-shadow 0.13s; }
+.kcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.kcard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 9px 9px 0 0; }
+.kcard.cg::before { background: var(--green-mid); }
+.kcard.ca::before { background: var(--amber-mid); }
+.kcard.cr::before { background: var(--red-mid); }
+.kcard.cb::before { background: var(--blue); }
 
-/* Actions */
-.action-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--rule);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;z-index:50;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
-.action-status{font-size:13px;color:var(--ink3)}
-.action-status strong{color:var(--ink)}
-.action-btns{display:flex;gap:10px}
-.btn{padding:9px 20px;border-radius:var(--r);border:1.5px solid var(--rule2);background:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);transition:all .12s}
-.btn:hover{background:var(--paper2)}
-.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-.btn-primary:hover{background:#2a2a28}
-.btn-submit{background:#1a6640;color:#fff;border-color:#1a6640}
-.btn-submit:hover{background:#155535}
+.kcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.klabel { font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.kvalue { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; line-height: 1; color: var(--navy); letter-spacing: -0.5px; }
+.sparkline-wrap { width: 56px; height: 32px; flex-shrink: 0; margin-top: 2px; }
+.kdelta { font-size: 10px; font-weight: 600; margin-top: 5px; }
+.kdelta.up { color: var(--green-mid); }
+.kdelta.dn { color: var(--red-mid); }
+.kdelta.fl { color: var(--muted); }
+.kbud { font-size: 9px; color: var(--muted2); margin-top: 2px; }
+.kprog { height: 3px; background: #e4edf7; border-radius: 2px; margin-top: 7px; }
+.kprog-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+.kprog-fill.cg { background: var(--green-mid); }
+.kprog-fill.ca { background: var(--amber-mid); }
+.kprog-fill.cr { background: var(--red-mid); }
+.kprog-fill.cb { background: var(--blue); }
 
-/* Toast */
-.toast{position:fixed;top:70px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--r-lg);font-size:13px;font-weight:500;z-index:999;transform:translateY(-8px);opacity:0;transition:all .3s;pointer-events:none}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.success{background:var(--green)}
-.toast.warning{background:var(--amber)}
+/* ── FUNNEL VIZ ── */
+.funnel-row { display: grid; grid-template-columns: 1fr 1.8fr; gap: 12px; }
+.funnel-card { background: var(--white); border: 1px solid var(--border); border-radius: 9px; padding: 16px 20px; box-shadow: var(--shadow); }
+.funnel-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+.funnel-stage { margin-bottom: 10px; }
+.funnel-stage-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.funnel-stage-name { font-size: 11px; font-weight: 600; color: var(--muted); }
+.funnel-stage-nums { display: flex; align-items: baseline; gap: 6px; }
+.funnel-stage-val { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+.funnel-stage-bud { font-size: 10px; color: var(--muted2); }
+.funnel-bar-track { height: 10px; background: #e4edf7; border-radius: 5px; overflow: hidden; }
+.funnel-bar-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+.funnel-conv { display: flex; align-items: center; gap: 6px; margin: 6px 0 10px 0; padding-left: 4px; }
+.funnel-conv-arrow { font-size: 10px; color: var(--muted2); }
+.funnel-conv-label { font-size: 10px; color: var(--muted); }
+.funnel-conv-val { font-size: 11px; font-weight: 700; color: var(--blue); }
+.funnel-conv-bud { font-size: 10px; color: var(--muted2); }
 
-/* Already submitted banner */
-.submitted-banner{background:var(--green-l);border:1px solid #90d080;border-radius:var(--r-lg);padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--green)}
+/* ── ETC / COMPLETION CALLOUT ── */
+.outcome-callout { background: var(--white); border: 1px solid var(--border); border-radius: 9px; padding: 16px 20px; box-shadow: var(--shadow); }
+.oc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.oc-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy); }
+.oc-alert { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+.oc-alert.warn { background: var(--amber-bg); color: var(--amber-mid); }
+.oc-alert.ok { background: var(--green-bg); color: var(--green-mid); }
+.oc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.oc-metric { padding: 12px; background: var(--off); border-radius: 7px; border: 1px solid var(--border); }
+.oc-m-label { font-size: 9px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.oc-m-val { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; }
+.oc-m-val.warn { color: var(--amber-mid); }
+.oc-m-val.ok { color: var(--green-mid); }
+.oc-m-val.bad { color: var(--red-mid); }
+.oc-m-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; font-size: 10px; color: var(--muted); }
+.oc-m-row span { font-weight: 600; }
+.oc-trend { margin-top: 10px; }
+.oc-trend-label { font-size: 9px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: var(--muted2); margin-bottom: 5px; }
+.oc-sparkbig { width: 100%; height: 40px; }
 
-/* Post-submit dashboard */
-.post-submit{max-width:860px;margin:0 auto;padding:40px 24px 80px;display:none}
-.ps-hero{text-align:center;margin-bottom:40px}
-.ps-check{width:56px;height:56px;border-radius:50%;background:var(--green-l);border:2px solid #90d080;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
-.ps-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:6px}
-.ps-sub{font-size:14px;color:var(--ink3)}
-.ps-score-big{font-family:'DM Serif Display',serif;font-size:64px;line-height:1;color:var(--blue);margin:16px 0 4px}
-.ps-score-label{font-size:13px;color:var(--ink3)}
-.ps-section-title{font-size:13px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin:32px 0 12px}
-.ps-cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:32px}
-.ps-cat{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);padding:12px;text-align:center}
-.ps-cat-name{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.ps-cat-score{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:4px}
-.ps-cat-max{font-size:10px;color:var(--ink3)}
-.ps-cat-bar{height:4px;background:var(--paper3);border-radius:2px;margin-top:6px;overflow:hidden}
-.ps-cat-fill{height:100%;border-radius:2px}
-.ps-history-card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:20px}
-.ps-chart-wrap{position:relative;height:220px;margin-top:12px}
-.ps-back{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);border:1.5px solid var(--rule2);background:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);margin-top:8px}
-.ps-back:hover{background:var(--paper2)}
-/* History reference tab */
-.hist-scroll{overflow-x:auto}
-.hist-table{width:100%;border-collapse:collapse;font-size:11px;min-width:400px}
-.hist-table th{padding:4px 8px;text-align:center;font-weight:700;color:var(--ink3);border-bottom:1px solid var(--rule);white-space:nowrap;font-size:10px}
-.hist-table th.obj-col{text-align:left}
-.hist-table td{padding:4px 8px;text-align:center;border-bottom:1px solid var(--paper2)}
-.hist-table td.obj-name{text-align:left;font-size:11px;color:var(--ink3);line-height:1.3;max-width:240px}
-.hist-table .sec-row td{background:var(--paper2);font-weight:700;color:var(--ink2);font-size:11px}
-.hist-table tr:last-child td{border-bottom:none}
-.hs{display:inline-block;min-width:22px;height:22px;border-radius:3px;font-size:11px;font-weight:700;line-height:22px;text-align:center;padding:0 3px}
-.hs-1{background:var(--red-l);color:var(--red)}.hs-2{background:var(--amber-l);color:var(--amber)}
-.hs-3{background:var(--blue-l);color:var(--blue)}.hs-4{background:var(--green-l);color:var(--green)}
-.hs-5{background:var(--teal-l);color:var(--teal)}.hs-0{background:var(--paper3);color:var(--ink4);font-size:9px}
-.ps-sec-card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden}
-.ps-sec-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--paper2);border-bottom:1px solid var(--rule)}
-.ps-sec-name{font-size:14px;font-weight:700}
-.ps-sec-pts{font-family:'DM Serif Display',serif;font-size:18px;color:var(--blue)}
-.ps-sec-pts-max{font-size:12px;color:var(--ink3);margin-left:3px}
-.ps-obj-row{display:grid;grid-template-columns:1fr auto;gap:16px;padding:10px 18px;border-bottom:1px solid var(--paper2);align-items:start}
-.ps-obj-row:last-child{border-bottom:none}
-.ps-obj-label{font-size:13px;color:var(--ink);line-height:1.4}
-.ps-obj-comment{font-size:11px;color:var(--ink3);margin-top:4px;font-style:italic}
-.ps-score-badge{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
-.ps-s-1{background:var(--red-l);color:var(--red)}
-.ps-s-2{background:var(--amber-l);color:var(--amber)}
-.ps-s-3{background:var(--blue-l);color:var(--blue)}
-.ps-s-4{background:var(--green-l);color:var(--green)}
-.ps-s-5{background:var(--teal-l);color:var(--teal)}
-.ps-s-0{background:var(--paper3);color:var(--ink3)}
+/* ── CHART CARDS ── */
+.ccards { display: grid; gap: 10px; }
+.cc2 { grid-template-columns: 1fr 1fr; }
+.cc3 { grid-template-columns: 1fr 1fr 1fr; }
+.ccard { background: var(--white); border: 1px solid var(--border); border-radius: 9px; padding: 14px 16px; box-shadow: var(--shadow); }
+.ccard-title { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy); margin-bottom: 3px; }
+.ccard-sub { font-size: 10px; color: var(--muted2); margin-bottom: 10px; }
+.clegend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.leg { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--muted); }
+.leg-sq { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-.sc-tab{padding:8px 20px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink3);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.sc-tab:hover{color:var(--ink)}
-.sc-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
-.hidden{display:none}
+/* ── TABLE ── */
+.twrap { background: var(--white); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; box-shadow: var(--shadow); }
+.tscroll { overflow-x: auto; }
+table.sc { width: 100%; border-collapse: collapse; font-size: 11px; }
+.sc thead tr:first-child th { background: var(--navy); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 7px 10px; text-align: center; white-space: nowrap; }
+.sc thead tr:first-child th:first-child { text-align: left; }
+.sc tbody td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--text); white-space: nowrap; text-align: right; }
+.sc tbody td:first-child { text-align: left; font-weight: 600; color: var(--navy); background: var(--off); font-size: 10px; min-width: 160px; }
+.sc tbody tr:last-child td { border-bottom: none; }
+.sec-row td { background: #e8eef7 !important; color: var(--navy2) !important; font-family: 'Barlow Condensed', sans-serif !important; font-size: 9px !important; font-weight: 700 !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; text-align: left !important; padding: 5px 10px !important; }
+/* Color-coded cells */
+.tc-g { background: #f1fbf2; }
+.tc-a { background: #fffbf2; }
+.tc-r { background: #fff5f5; }
+.tc-g td:first-child, .tc-a td:first-child, .tc-r td:first-child { background: var(--off) !important; }
+.badge-g { background: var(--green-bg); color: var(--green); font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; display: inline-block; }
+.badge-a { background: var(--amber-bg); color: var(--amber-mid); font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; display: inline-block; }
+.badge-r { background: var(--red-bg); color: var(--red-mid); font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; display: inline-block; }
+.cell-num { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); display: block; }
+.cell-vs { font-size: 8px; font-weight: 600; display: block; margin-top: 1px; }
+.cell-vs.up { color: var(--green-mid); }
+.cell-vs.dn { color: var(--red-mid); }
+.cell-na { color: #ccc; font-style: italic; font-size: 10px; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.anim { animation: fadeUp 0.25s ease both; }
+
+@media (max-width:1100px) { .r3-grid{grid-template-columns:repeat(3,1fr);} .g8{grid-template-columns:repeat(4,1fr);} .cc3{grid-template-columns:1fr 1fr;} .funnel-row{grid-template-columns:1fr;} }
+@media (max-width:800px)  { .main{padding:1rem;} .g4{grid-template-columns:1fr 1fr;} .cc2,.cc3{grid-template-columns:1fr;} .r3-grid{grid-template-columns:repeat(2,1fr);} .oc-grid{grid-template-columns:1fr;} }
+@media (max-width:500px)  { .g4,.g8{grid-template-columns:1fr 1fr;} }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="header-logo">LP First Capital</div>
-  <div class="header-right">
-    <span class="header-badge" id="quarter-badge">LBS Scorecard</span>
+<div class="header">
+  <div class="brand">
+    <span class="logo">ZOLLEGE</span>
+    <span class="hdiv"></span>
+    <span class="htitle">KPI Performance Dashboard</span>
   </div>
-</header>
+  <div class="hright">
+    <span class="hperiod" id="hperiod">Feb 2026</span>
+    <span class="hupdated">Apr 2025 – Apr 2026</span>
+  </div>
+</div>
 
-<!-- SETUP SCREEN -->
-<div id="setup-screen" class="setup-screen">
-  <div class="setup-logo">LBS Scorecard</div>
-  <p class="setup-sub">Select your platform and the quarter you are completing to begin scoring.</p>
-  <div class="setup-card">
-    <div class="setup-label">Platform</div>
-    <select class="setup-select" id="platform-sel">
-      <option value="">— Select your platform —</option>
-      <option>United</option><option>Ripple</option><option>Ramp</option>
-      <option>Total Seminars</option><option>Open Road</option><option>Cascade</option>
-      <option>Alpha</option><option>Fastest Labs</option><option>Northpoint</option>
-      <option>Urgent</option><option>Zollege</option><option>REI</option>
-      <option>Curb</option><option>Rewind</option>
-    </select>
-    <div class="setup-label">Quarter</div>
-    <div class="setup-quarter">
-      <select id="year-sel">
-        <option>2025</option><option>2026</option><option>2027</option>
-      </select>
-      <select id="q-sel">
-        <option value="Q1">Q1 (Jan–Mar)</option>
-        <option value="Q2">Q2 (Apr–Jun)</option>
-        <option value="Q3">Q3 (Jul–Sep)</option>
-        <option value="Q4" selected>Q4 (Oct–Dec)</option>
-      </select>
-    </div>
-    <div class="existing-note" id="existing-note" style="display:none">📋 A draft exists for this quarter. Opening it now.</div>
-    <div id="locked-note" style="display:none;background:#fde8e8;border-radius:var(--r);padding:12px;font-size:12px;color:#8a1f1f;margin-top:16px;border:1px solid #f0b0b0">
-      🔒 This quarter has already been submitted and is locked.
-      <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
-        <input type="password" id="regrade-pin" placeholder="Enter PIN to regrade" style="padding:5px 10px;border:1.5px solid #f0b0b0;border-radius:var(--r);font-size:12px;font-family:'DM Sans',sans-serif;width:180px;background:#fff;color:var(--ink)"/>
-        <button onclick="attemptRegrade()" style="padding:5px 12px;border-radius:var(--r);border:1.5px solid #e05050;background:#e05050;color:#fff;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif">Unlock</button>
+<!-- Health Score Strip -->
+<div class="health-strip" id="healthStrip">
+  <span class="hs-label">Health</span>
+</div>
+
+<div class="main">
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Preset</span>
+      <div class="btn-row">
+        <button class="pbtn" onclick="setPreset('latest',this)">Latest</button>
+        <button class="pbtn" onclick="setPreset('q1fy26',this)">Q1 FY26</button>
+        <button class="pbtn" onclick="setPreset('h2fy25',this)">H2 FY25</button>
+        <button class="pbtn" onclick="setPreset('ytd',this)">YTD FY26</button>
+        <button class="pbtn active" onclick="setPreset('all',this)">All</button>
       </div>
     </div>
-    <button class="btn-start" onclick="startScorecard()">Open Scorecard →</button>
-  </div>
-</div>
-
-<!-- SCORECARD -->
-<div id="scorecard-wrap" class="scorecard-wrap hidden">
-  <div class="submitted-banner hidden" id="submitted-banner">
-    ✓ This scorecard has been submitted to LP First Capital. You can still view and update scores below.
-  </div>
-
-  <div class="scorecard-top">
-    <div class="scorecard-identity">
-      <h1 id="sc-platform-name">Platform</h1>
-      <div class="quarter-tag" id="sc-quarter-tag">Q4 2025 · LBS Scorecard</div>
+    <div class="vdiv"></div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Months</span>
+      <div class="btn-row" id="mtoggles"></div>
     </div>
-    <div class="score-dial">
-      <div class="dial-value" id="dial-value">0</div>
-      <div class="dial-max">of <span id="dial-max">213</span> possible</div>
-      <div class="dial-bar"><div class="dial-fill" id="dial-fill"></div></div>
+    <div class="vdiv"></div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">View</span>
+      <div class="btn-row">
+        <button class="pbtn active" id="vSingle" onclick="setView('single')">Single</button>
+        <button class="pbtn" id="vTrend"  onclick="setView('trend')">Trends</button>
+        <button class="pbtn" id="vTable"  onclick="setView('table')">Table</button>
+      </div>
     </div>
   </div>
 
-  <!-- tabs -->
-  <div style="display:flex;gap:0;border-bottom:2px solid var(--rule);margin-bottom:20px">
-    <button class="sc-tab active" id="tab-grade" onclick="switchTab('grade')">Grade</button>
-    <button class="sc-tab" id="tab-history" onclick="switchTab('history')">Score History</button>
-  </div>
-
-  <!-- grade tab -->
-  <div id="tab-content-grade">
-    <!-- category summary -->
-    <div class="cat-summary" id="cat-summary"></div>
-    <!-- sections -->
-    <div id="sections-wrap"></div>
-  </div>
-
-  <!-- history tab -->
-  <div id="tab-content-history" class="hidden">
-    <div class="hist-scroll">
-      <table class="hist-table" id="hist-table"></table>
-    </div>
-  </div>
-
-  <div style="height:80px"></div>
+  <div id="dash"></div>
 </div>
-
-<!-- POST-SUBMIT SUMMARY -->
-<div class="post-submit" id="post-submit">
-  <div class="ps-hero">
-    <div class="ps-check">✓</div>
-    <div class="ps-title" id="ps-title">Scorecard Submitted</div>
-    <div class="ps-sub" id="ps-sub">Q4 2025 · LP First Capital</div>
-    <div class="ps-score-big" id="ps-score-big">—</div>
-    <div class="ps-score-label">Overall LBS Score</div>
-  </div>
-
-  <div class="ps-section-title">Score by Category</div>
-  <div class="ps-cat-grid" id="ps-cat-grid"></div>
-
-  <div class="ps-section-title" style="margin-top:32px">Score History</div>
-  <div class="ps-history-card">
-    <div style="position:relative;height:200px"><canvas id="ps-history-chart"></canvas></div>
-  </div>
-
-  <div class="ps-section-title" style="margin-top:32px">Full Score Summary &amp; Comments</div>
-  <div class="ps-note" style="font-size:12px;color:var(--ink3);margin-bottom:16px">Use this as a reference throughout the quarter.</div>
-  <div id="ps-detail"></div>
-
-  <button class="ps-back" onclick="goBackToScorecard()">← Back to Scorecard</button>
-</div>
-
-<!-- ACTION BAR -->
-<div class="action-bar hidden" id="action-bar">
-  <div class="action-status">
-    <strong id="ab-scored">0</strong> of <strong id="ab-total">54</strong> objectives scored
-  </div>
-  <div class="action-btns">
-    <button class="btn" id="copy-prior-btn" onclick="copyPriorScores()" style="display:none">↩ Keep Last Quarter's Scores</button>
-    <button class="btn" onclick="saveDraft()">Save Draft</button>
-    <button class="btn btn-submit" onclick="submitScorecard()">Submit</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-// ─────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────
-const SECTIONS = [
-  { id:'dream', name:'Dream', weight:'Medium', weightVal:0.6, maxRaw:15,
-    subgroups:[
-      { name:'Dream Big', objectives:[
-        { id:'d1', label:'Organization has a clearly defined "Dream"', c1:'No clear vision or long-term goals', c5:'Highly defined, compelling vision deeply embedded in culture' }
-      ]},
-      { name:'Execute', objectives:[
-        { id:'d2', label:'Dream is communicated and adopted throughout the organization', c1:'Little to no articulation of future aspiration', c5:'Employees fully aligned; vision drives all strategic decisions' },
-        { id:'d3', label:'Organization has a clearly defined 10-year, 3-year, and 1-year goal', c1:'No clearly defined goals for any time frame', c5:'Well-defined, articulated goals for all three horizons across the organization' }
-      ]}
-    ]
-  },
-  { id:'structure', name:'Structure', weight:'Medium', weightVal:0.6, maxRaw:40,
-    subgroups:[
-      { name:'Documentation', objectives:[
-        { id:'s1', label:'Organization has a completed "Culture Document" (core values + expectations)', c1:'No Culture Document or formal documentation of core values', c5:'Fully completed, actively used, deeply integrated Culture Document' },
-        { id:'s2', label:'Organization maintains and tracks a robust "issue list"', c1:'No issue list or formal system for identifying/managing issues', c5:'Robust, detailed issue list actively tracked with thorough follow-up' },
-        { id:'s3', label:'Communication plan documented outlining company goals, updates, etc.', c1:'Communication plan nonexistent or severely lacking', c5:'Comprehensive, clearly documented plan effectively outlining all goals and updates' }
-      ]},
-      { name:'Meetings', objectives:[
-        { id:'s4', label:'Everyone is on a team that meets weekly', c1:'Not everyone on a team; meetings infrequent and disorganized', c5:'Every team member in well-structured, collaborative weekly meetings' },
-        { id:'s5', label:'Leadership team has an efficiently structured weekly meeting cadence to review the 90-day scorecard', c1:'Chaotic meetings; 90-day scorecard rarely reviewed', c5:'Highly efficient cadence; leadership regularly reviews scorecard with clear agendas' },
-        { id:'s6', label:'Quarterly cadence with Leadership to establish new 90-day objectives', c1:'No quarterly meetings with leadership; no formal goal-setting process', c5:'Well-defined regular quarterly process with clear actionable 90-day objectives' }
-      ]},
-      { name:'Accounting', objectives:[
-        { id:'s7', label:'GAAP accounting principles implemented', c1:'Financial statements do not adhere to GAAP', c5:'Fully implements GAAP with robust systems ensuring consistent compliance' },
-        { id:'s8', label:'Internal controls in place and being used', c1:'No internal controls; no formal procedures for accuracy or risk management', c5:'Comprehensive internal controls rigorously implemented, well-documented, regularly reviewed' }
-      ]}
-    ]
-  },
-  { id:'score', name:'Score', weight:'Medium', weightVal:0.6, maxRaw:35,
-    subgroups:[
-      { name:'Game Defined', objectives:[
-        { id:'sc1', label:'Robust quarterly goals defined for Leadership team', c1:'No defined 90-day objectives; no formal goal-setting process', c5:'Robust, clearly defined 90-day objectives fully integrated into planning' },
-        { id:'sc2', label:'Robust quarterly goals defined for each department/function', c1:'Departments have no 90-day objectives', c5:'Every department has robust, clearly defined quarterly objectives' },
-        { id:'sc3', label:'Robust quarterly goals defined for each individual', c1:'90-day objectives nonexistent or poorly defined', c5:'Each individual has clear, well-defined, SMART 90-day objectives' }
-      ]},
-      { name:'Inputs', objectives:[
-        { id:'sc4', label:'Weekly scoreboard developed and organization fully accountable to', c1:'No weekly scoreboard; no formal process for monitoring performance', c5:'Comprehensive weekly scoreboard fully integrated into performance management' }
-      ]},
-      { name:'Outputs', objectives:[
-        { id:'sc5', label:'Every member of the organization has and is accountable to a KPI (leading & lagging)', c1:'Not every member has defined KPIs; no formal tracking system', c5:'Every member has well-defined KPIs with strong accountability culture' }
-      ]},
-      { name:'Win/Lose', objectives:[
-        { id:'sc6', label:'Open book management system in place', c1:'No open book system; financial information kept secret', c5:'Open book system fully implemented with transparent financial and operational data' },
-        { id:'sc7', label:'Every member has a stake in the outcome; company/department/individual win together', c1:'Members have little sense of shared stakes or collective success', c5:'All members deeply aligned with collective outcomes at all levels' }
-      ]}
-    ]
-  },
-  { id:'people', name:'People', weight:'High', weightVal:0.8, maxRaw:40,
-    subgroups:[
-      { name:'Know', objectives:[
-        { id:'p1', label:'All key roles on the accountability chart filled (Sales, Operations, Finance)', c1:'Key roles not filled; significant gaps in accountability chart', c5:'All key roles fully filled with clearly defined responsibilities' },
-        { id:'p2', label:'Organizational chart completed and updated quarterly (who reports to who)', c1:'No organizational chart or significantly outdated', c5:'Fully complete org chart updated every quarter' }
-      ]},
-      { name:'Right People / Right Seats', objectives:[
-        { id:'p3', label:'Entire organization has been mapped against Get it, Want it, Capacity to do it matrix', c1:'Not mapped against GWC matrix; no formal evaluation process', c5:'Entire organization fully mapped with comprehensive GWC evaluation process' },
-        { id:'p4', label:'Members of organization are maximized against Get it, Want it, Capacity to do it matrix', c1:'Members not effectively evaluated or maximized against GWC matrix', c5:'Members thoroughly evaluated and maximized; optimal alignment of talent' },
-        { id:'p5', label:'Robust job description (KRA) document for every employee', c1:'No KRA documents or they are poorly defined', c5:'Comprehensive KRA documents for every employee, regularly updated' }
-      ]},
-      { name:'Grow', objectives:[
-        { id:'p6', label:'Quarterly cadence to review performance for every employee', c1:'No quarterly performance review cadence in place', c5:'Consistent quarterly reviews for every employee, well-documented and actionable' },
-        { id:'p7', label:'Annual performance evaluations completed for every employee', c1:'Annual evaluations not completed or highly inconsistent', c5:'Annual evaluations completed for every employee with clear development plans' },
-        { id:'p8', label:'Annual organizational review tracker completed', c1:'No annual organizational review tracker in place or completed', c5:'Annual organizational review tracker fully completed and effectively integrated' }
-      ]}
-    ]
-  },
-  { id:'process', name:'Process', weight:'Medium', weightVal:0.6, maxRaw:25,
-    subgroups:[
-      { name:'Finance', objectives:[
-        { id:'pr1', label:'SOPs defined and disseminated across major business functions (Sales, Operations, Finance)', c1:'No defined SOPs for any major business functions', c5:'Comprehensive, clearly defined SOPs for all major business functions, regularly updated' },
-        { id:'pr2', label:'Monthly financial close completed within 10 days of month end', c1:'Financial close not completed within 10 days; significant delays', c5:'Financial close reliably completed within 10 days every month' },
-        { id:'pr3', label:'Monthly accrual forecasts updated', c1:'Monthly accrual forecasts not updated regularly', c5:'Monthly accrual forecasts thoroughly and consistently updated each month' },
-        { id:'pr4', label:'Monthly balance sheet reconciliations completed', c1:'Monthly balance sheet reconciliations not completed', c5:'Monthly balance sheet reconciliations consistently and thoroughly completed' }
-      ]},
-      { name:'Technology', objectives:[
-        { id:'pr5', label:'Fully leveraged technology infrastructure to support scalable growth', c1:'Technology not effectively leveraged; minimal use in supporting processes', c5:'Technology fully leveraged and strategically integrated across all functions' }
-      ]}
-    ]
-  },
-  { id:'product', name:'Product', weight:'Low', weightVal:0.4, maxRaw:20,
-    subgroups:[
-      { name:'Audit', objectives:[
-        { id:'pd1', label:'Quarterly product audit completed and actions taken', c1:'Quarterly product audits not conducted; no actions taken', c5:'Quarterly product audits thoroughly completed; actionable insights effectively implemented' },
-        { id:'pd2', label:'Offer a fully differentiated and unique value proposition', c1:'Value proposition unclear or poorly communicated', c5:'Highly differentiated, compelling value proposition clearly communicated across all channels' }
-      ]},
-      { name:'Customer', objectives:[
-        { id:'pd3', label:'Hold a market leading customer NPS score and have a process for regularly maintaining it', c1:'No customer NPS measurement or process for soliciting feedback', c5:'Market-leading customer NPS with robust, regular measurement and improvement process' },
-        { id:'pd4', label:'Hold a market leading employee NPS score and have a process for soliciting feedback', c1:'No employee NPS measurement or feedback solicitation process', c5:'Market-leading employee NPS with consistent, structured feedback and improvement process' }
-      ]}
-    ]
-  },
-  { id:'revgen', name:'Revenue Generation', weight:'High', weightVal:0.8, maxRaw:30,
-    subgroups:[
-      { name:'Retention', objectives:[
-        { id:'r1', label:'Customer churn analysis and retention plan created and updated annually', c1:'No churn analysis or retention plan in place', c5:'Detailed churn analysis and retention plan created annually with clear action items' }
-      ]},
-      { name:'Growth', objectives:[
-        { id:'r2', label:'Bi-annual revenue generation whiteboarding cadence', c1:'No bi-annual revenue whiteboarding session; no structured ideation process', c5:'Bi-annual whiteboarding sessions well-structured with clear revenue initiatives' },
-        { id:'r3', label:'Weekly sales activity metrics tracked and reported on', c1:'Sales activity metrics not tracked or reported regularly', c5:'Comprehensive weekly sales activity metrics tracked and reported with clear accountability' },
-        { id:'r4', label:'Win/loss performance analysis performed monthly', c1:'No win/loss analysis performed', c5:'Monthly win/loss analysis performed with insights driving strategy and coaching' },
-        { id:'r5', label:'Track wallet share per customer and create an up-sell/cross-sell plan', c1:'No wallet share tracking or up-sell/cross-sell planning in place', c5:'Wallet share tracked per customer with robust up-sell/cross-sell plan actively executed' },
-        { id:'r6', label:'Quarterly pricing audit completed and actions taken', c1:'No quarterly pricing audit; pricing decisions made without formal review', c5:'Quarterly pricing audit completed with clear actions identified and implemented' }
-      ]}
-    ]
-  },
-  { id:'efficiency', name:'Efficiency', weight:'High', weightVal:0.8, maxRaw:30,
-    subgroups:[
-      { name:'Cost Management', objectives:[
-        { id:'e1', label:'Quarterly COGS analysis complete and savings captured', c1:'No COGS analysis performed; no formal process for capturing savings', c5:'Quarterly COGS analysis completed with savings consistently identified and captured' },
-        { id:'e2', label:'Bi-annual overhead cost analysis completed (as a % of revenue)', c1:'No overhead cost analysis; overhead not tracked as % of revenue', c5:'Bi-annual overhead cost analysis completed with clear benchmarks and improvement actions' },
-        { id:'e3', label:'CapEx ROI analysis completed on new purchases', c1:'No CapEx ROI analysis; purchases made without formal return analysis', c5:'CapEx ROI analysis consistently completed before and after major purchases' },
-        { id:'e4', label:'Quarterly labor efficiency review completed', c1:'No quarterly labor efficiency review; labor costs not systematically analyzed', c5:'Quarterly labor efficiency review completed with clear insights driving workforce decisions' },
-        { id:'e5', label:'Bi-annual supplier/vendor spend analysis completed', c1:'No supplier/vendor spend analysis; vendor relationships not systematically reviewed', c5:'Bi-annual supplier spend analysis completed with savings and optimizations identified' },
-        { id:'e6', label:'Zero-based budget in-place and integrated into reporting', c1:'No zero-based budgeting approach; no integration with reporting systems', c5:'Fully implemented zero-based budgeting seamlessly integrated into all reporting systems' }
-      ]}
-    ]
-  },
-  { id:'expansion', name:'Expansion', weight:'Low', weightVal:0.4, maxRaw:20,
-    subgroups:[
-      { name:'M&A', objectives:[
-        { id:'ex1', label:'Platform is add-on ready (stable, cash-flowing, infrastructure-rich)', c1:'Platform not add-on ready; unstable operations, weak cash flow, limited infrastructure', c5:'Platform fully add-on ready: stable, cash-flowing, with rich infrastructure to support integration' },
-        { id:'ex2', label:'M&A playbook defined to include buy box (size, geography, product mix) and integration process', c1:'No M&A playbook; no defined buy box or integration process', c5:'Comprehensive M&A playbook with detailed buy box and integration process defined' },
-        { id:'ex3', label:'Management team is actively participating in M&A activities', c1:'Management team not participating in M&A activities', c5:'Management team actively engaged in sourcing, evaluating, and executing M&A opportunities' }
-      ]},
-      { name:'De Novo', objectives:[
-        { id:'ex4', label:'Robust de novo expansion playbook (strategy + execution) developed', c1:'No de novo expansion playbook; no strategy or execution framework', c5:'Comprehensive de novo playbook with detailed strategy and execution framework fully developed' }
-      ]}
-    ]
-  },
-  { id:'results', name:'Results', weight:'High', weightVal:0.8, maxRaw:15,
-    subgroups:[
-      { name:'Financial', objectives:[
-        { id:'re1', label:'Quarterly revenue growth targets achieved', c1:'Quarterly revenue growth targets consistently missed', c5:'Quarterly revenue growth targets consistently achieved or exceeded' },
-        { id:'re2', label:'Quarterly EBITDA growth targets achieved', c1:'Quarterly EBITDA growth targets consistently missed', c5:'Quarterly EBITDA growth targets consistently achieved or exceeded' }
-      ]},
-      { name:'Operational', objectives:[
-        { id:'re3', label:'Achievement of all quarterly objectives', c1:'Quarterly objectives rarely achieved; low completion rate across teams', c5:'All quarterly objectives consistently achieved with high completion rate across all teams' }
-      ]}
-    ]
-  }
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const MONTHS = ['Apr 2025','May 2025','Jun 2025','Jul 2025','Aug 2025','Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026'];
+
+// D[month][metric] = {a:actual, b:budget, py:priorYear}
+const D = {
+  'Apr 2025':{ leads:{a:6156,b:4470,py:5177}, lte:{a:11.7,b:13.2,py:11.7}, enrollments:{a:772,b:592,py:605}, bookings:{a:3030,b:2361,py:2164}, asp:{a:3925,b:3989,py:3576}, efs:{a:597,b:547,py:501}, ets:{a:90.1,b:88.2,py:87.2}, starts:{a:538,b:473,py:437}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1373,b:1267,py:872}, classStarts:{a:75,b:72,py:50}, studPerClass:{a:7.2,b:7.3,py:6.6}, capUtil:{a:39.2,b:37.3,py:50.1}, completion:{a:85.9,b:90.5,py:85.4}, etc:{a:74.5,b:78.2,py:77.4} }
+  'May 2025':{ leads:{a:6547,b:5470,py:7654}, lte:{a:11.6,b:11.6,py:7.0}, enrollments:{a:758,b:637,py:521}, bookings:{a:2974,b:2549,py:2003}, asp:{a:3923,b:4001,py:3724}, efs:{a:896,b:555,py:585}, ets:{a:90.3,b:88.6,py:84.4}, starts:{a:809,b:492,py:494}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1856,b:2019,py:868}, classStarts:{a:103,b:112,py:46}, studPerClass:{a:7.9,b:4.4,py:10.7}, capUtil:{a:43.6,b:24.0,py:43.6}, completion:{a:89.1,b:88.1,py:89.1}, etc:{a:79.5,b:80.2,py:75.3} }
+  'Jun 2025':{ leads:{a:6195,b:4820,py:6475}, lte:{a:12.2,b:12.8,py:8.5}, enrollments:{a:755,b:616,py:550}, bookings:{a:2843,b:2401,py:2050}, asp:{a:3765,b:3897,py:3728}, efs:{a:758,b:758,py:835}, ets:{a:92.2,b:88.0,py:91.4}, starts:{a:628,b:667,py:763}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1481,b:1673,py:1668}, classStarts:{a:81,b:93,py:90}, studPerClass:{a:7.8,b:7.2,py:8.5}, capUtil:{a:42.0,b:39.9,py:45.1}, completion:{a:85.8,b:90.6,py:85.8}, etc:{a:83.0,b:79.7,py:80.9} }
+  'Jul 2025':{ leads:{a:6690,b:5697,py:6301}, lte:{a:14.0,b:12.8,py:10.6}, enrollments:{a:937,b:731,py:670}, bookings:{a:3510,b:2909,py:2487}, asp:{a:3746,b:3980,py:3712}, efs:{a:759,b:512,py:445}, ets:{a:90.1,b:89.3,py:91.9}, starts:{a:684,b:457,py:409}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1449,b:1628,py:786}, classStarts:{a:80,b:94,py:43}, studPerClass:{a:8.6,b:4.9,py:9.5}, capUtil:{a:47.2,b:28.1,py:52.0}, completion:{a:88.6,b:89.3,py:93.0}, etc:{a:77.4,b:80.8,py:81.6} }
+  'Aug 2025':{ leads:{a:7887,b:5999,py:6273}, lte:{a:13.3,b:13.8,py:11.4}, enrollments:{a:1047,b:827,py:714}, bookings:{a:3871,b:3965,py:3279}, asp:{a:3697,b:3705,py:3705}, efs:{a:797,b:738,py:649}, ets:{a:91.1,b:89.0,py:92.3}, starts:{a:726,b:657,py:599}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1306,b:1558,py:984}, classStarts:{a:71,b:94,py:53}, studPerClass:{a:10.2,b:7.0,py:13.3}, capUtil:{a:55.6,b:42.3,py:60.9}, completion:{a:86.6,b:86.6,py:88.6}, etc:{a:78.9,b:80.5,py:78.8} }
+  'Sep 2025':{ leads:{a:7881,b:5026,py:7185}, lte:{a:11.9,b:13.4,py:7.3}, enrollments:{a:939,b:673,py:524}, bookings:{a:3484,b:2628,py:2628}, asp:{a:3711,b:3904,py:3656}, efs:{a:1390,b:941,py:873}, ets:{a:93.5,b:88.8,py:86.7}, starts:{a:1299,b:835,py:802}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:2460,b:2819,py:1584}, classStarts:{a:136,b:94,py:87}, studPerClass:{a:9.6,b:8.9,py:8.9}, capUtil:{a:52.8,b:29.6,py:50.8}, completion:{a:85.8,b:90.6,py:85.8}, etc:{a:83.0,b:80.4,py:78.8} }
+  'Oct 2025':{ leads:{a:8020,b:5114,py:5622}, lte:{a:11.4,b:12.5,py:8.6}, enrollments:{a:915,b:639,py:482}, bookings:{a:3360,b:2505,py:1821}, asp:{a:3672,b:3921,py:3777}, efs:{a:815,b:815,py:504}, ets:{a:92.5,b:88.0,py:89.1}, starts:{a:754,b:456,py:449}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1739,b:1774,py:1038}, classStarts:{a:94,b:94,py:61}, studPerClass:{a:8.0,b:4.9,py:7.4}, capUtil:{a:43.4,b:25.7,py:43.3}, completion:{a:88.1,b:90.6,py:88.1}, etc:{a:79.0,b:79.7,py:75.5} }
+  'Nov 2025':{ leads:{a:7137,b:3869,py:4470}, lte:{a:11.6,b:12.0,py:10.0}, enrollments:{a:826,b:424,py:449}, bookings:{a:2982,b:1841,py:1624}, asp:{a:3610,b:3977,py:3617}, efs:{a:613,b:457,py:370}, ets:{a:91.7,b:87.5,py:91.1}, starts:{a:562,b:400,py:337}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1429,b:1429,py:775}, classStarts:{a:77,b:81,py:41}, studPerClass:{a:7.3,b:4.9,py:8.2}, capUtil:{a:39.3,b:28.0,py:43.5}, completion:{a:86.8,b:90.2,py:86.8}, etc:{a:79.0,b:78.8,py:79.0} }
+  'Dec 2025':{ leads:{a:8262,b:3877,py:4850}, lte:{a:11.0,b:11.6,py:9.6}, enrollments:{a:907,b:450,py:468}, bookings:{a:3331,b:1779,py:1742}, asp:{a:3673,b:3953,py:3722}, efs:{a:571,b:535,py:304}, ets:{a:87.7,b:86.6,py:84.9}, starts:{a:501,b:462,py:278}, activeSchools:{a:null,b:null,py:null}, classWeeks:{a:null,b:null,py:null}, capacity:{a:1328,b:1279,py:807}, classStarts:{a:73,b:73,py:46}, studPerClass:{a:6.9,b:6.9,py:8.3}, capUtil:{a:37.7,b:36.1,py:34.4}, completion:{a:88.8,b:90.9,py:88.8}, etc:{a:76.5,b:78.5,py:81.2} }
+  'Jan 2026':{ leads:{a:11702,b:10837,py:7280}, lte:{a:9.9,b:10.4,py:10.2}, enrollments:{a:1163,b:1123,py:739}, bookings:{a:4464,b:3676,py:2822}, asp:{a:3839,b:3273,py:3693}, efs:{a:1597,b:1107,py:708}, ets:{a:86.8,b:90.6,py:84.9}, starts:{a:1386,b:1003,py:601}, activeSchools:{a:222,b:200,py:129}, classWeeks:{a:5,b:5,py:4}, capacity:{a:2859,b:2260,py:null}, classStarts:{a:158,b:172,py:87}, studPerClass:{a:6.9,b:5.8,py:6.9}, capUtil:{a:48.5,b:44.4,py:39.0}, completion:{a:84.8,b:89.8,py:82.8}, etc:{a:73.6,b:81.4,py:70.3} },
+  'Apr 2026':{ leads:{a:9605,b:8689,py:6156}, lte:{a:10.7,b:10.4,py:12.5}, enrollments:{a:1023,b:903,py:772}, bookings:{a:4157,b:2861,py:3030}, asp:{a:4064,b:3168,py:3925}, efs:{a:1261,b:1075,py:597}, ets:{a:87.1,b:90.4,py:90.1}, starts:{a:1098,b:975,py:538}, activeSchools:{a:254,b:248,py:151}, classWeeks:{a:4,b:3,py:4}, capacity:{a:2288,b:2167,py:null}, classStarts:{a:132,b:188,py:75}, studPerClass:{a:8.3,b:null,py:7.2}, capUtil:{a:48.0,b:45.0,py:39.2}, completion:{a:87.7,b:89.8,py:85.9}, etc:{a:76.3,b:81.5,py:77.4} },
+  'Mar 2026':{ leads:{a:7663,b:8987,py:6471}, lte:{a:13.9,b:10.9,py:10.9}, enrollments:{a:1068,b:931,py:708}, bookings:{a:4285,b:2968,py:2786}, asp:{a:4012,b:3188,py:3934}, efs:{a:1039,b:978,py:927}, ets:{a:85.9,b:89.3,py:89.6}, starts:{a:893,b:876,py:855}, activeSchools:{a:252,b:238,py:151}, classWeeks:{a:4,b:4,py:4}, capacity:{a:2113,b:1696,py:null}, classStarts:{a:117,b:145,py:111}, studPerClass:{a:7.6,b:6.0,py:7.7}, capUtil:{a:42.3,b:51.7,py:42.6}, completion:{a:84.8,b:89.8,py:86.3}, etc:{a:72.9,b:80.5,py:79.6} },
+  'Feb 2026':{ leads:{a:9210,b:9527,py:5555}, lte:{a:13.5,b:10.4,py:13.5}, enrollments:{a:1067,b:990,py:749}, bookings:{a:4117,b:3189,py:2898}, asp:{a:3858,b:3221,py:3869}, efs:{a:875,b:620,py:630}, ets:{a:86.2,b:90.6,py:90.0}, starts:{a:754,b:560,py:568}, activeSchools:{a:237,b:211,py:129}, classWeeks:{a:4,b:4,py:4}, capacity:{a:1546,b:1166,py:null}, classStarts:{a:87,b:93,py:70}, studPerClass:{a:8.7,b:6.0,py:8.1}, capUtil:{a:48.8,b:48.0,py:44.0}, completion:{a:84.8,b:89.8,py:78.9}, etc:{a:73.1,b:81.2,py:71.1} }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let sel = [...MONTHS];
+let view = 'single';
+let charts = [];
+
+// ─── FORMATTERS ──────────────────────────────────────────────────────────────
+const fN  = (v,d=0) => v==null ? '—' : d>0 ? (+v).toFixed(d) : Math.round(v).toLocaleString();
+const fP  = v => v==null ? '—' : (+v).toFixed(1)+'%';
+const fD  = v => v==null ? '—' : '$'+Math.round(v).toLocaleString();
+const fK  = v => v==null ? '—' : v>=1000 ? '$'+(v/1000).toFixed(1)+'M' : '$'+Math.round(v)+'k';
+const fShort = v => v==null ? '—' : v>=1000000 ? (v/1000000).toFixed(2)+'M' : v>=1000 ? (v/1000).toFixed(1)+'k' : Math.round(v).toLocaleString();
+
+function pctVsBud(a,b){ return (b && a!=null) ? Math.round((a/b)*100) : null; }
+function colClass(a,b,hi=true){ if(!b||a==null) return 'cb'; const r=a/b; return hi?(r>=0.95?'cg':r>=0.80?'ca':'cr'):(r<=1.05?'cg':r<=1.20?'ca':'cr'); }
+function colStr(a,b,hi=true){ if(!b||a==null) return 'none'; const r=a/b; return hi?(r>=0.95?'green':r>=0.80?'amber':'red'):(r<=1.05?'green':r<=1.20?'amber':'red'); }
+function dirLabel(a,b,hi=true){ if(!b||a==null) return 'fl'; return hi?(a>=b?'up':'dn'):(a<=b?'up':'dn'); }
+function vsText(a,b,fmt){ if(!b||a==null) return ''; const d=a-b; const s=d>=0?'+':''; return s+fmt(d); }
+
+// ─── SPARKLINE (canvas) ───────────────────────────────────────────────────────
+function drawSparkline(canvas, data, color) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth || 56;
+  const h = canvas.offsetHeight || 32;
+  canvas.width = w * 2; canvas.height = h * 2; ctx.scale(2,2);
+  const vals = data.filter(v => v!=null);
+  if (vals.length < 2) return;
+  const mn = Math.min(...vals), mx = Math.max(...vals), rng = mx-mn || 1;
+  const pts = vals.map((v,i) => ({ x: (i/(vals.length-1))*(w-4)+2, y: h-4 - ((v-mn)/rng)*(h-8) }));
+  ctx.clearRect(0,0,w,h);
+  ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+  pts.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.stroke();
+  // last dot
+  const last = pts[pts.length-1];
+  ctx.beginPath(); ctx.arc(last.x, last.y, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = color; ctx.fill();
+}
+
+function sparkColor(cc){ return cc==='cg'?'#2e7d32':cc==='ca'?'#e65100':cc==='cr'?'#c62828':'#1565C0'; }
+
+// ─── HEALTH STRIP ─────────────────────────────────────────────────────────────
+const HEALTH_METRICS = [
+  {key:'leads',label:'Leads',hi:true,fmt:fN},
+  {key:'enrollments',label:'Enroll',hi:true,fmt:fN},
+  {key:'starts',label:'Starts',hi:true,fmt:fN},
+  {key:'bookings',label:'Bookings',hi:true,fmt:fK},
+  {key:'lte',label:'LTE%',hi:true,fmt:fP},
+  {key:'ets',label:'ETS%',hi:true,fmt:fP},
+  {key:'completion',label:'Completion',hi:true,fmt:fP},
+  {key:'etc',label:'ETC%',hi:true,fmt:fP},
+  {key:'capUtil',label:'Cap Util',hi:true,fmt:fP},
 ];
-
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-let state = { platform:'', quarter:'', year:'', scores:{}, comments:{}, submitted:false, priorScores:{}, priorPeriod:'', scoreHistory:[] };
-let openSections = new Set();
-
-// ─────────────────────────────────────────────
-// GOOGLE SHEETS BACKEND
-// ─────────────────────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbz6IYbVx6cvDyB8eifyOYgEUgeHP0xesdCJn8eSg-BDEbZj_-JIAFlfpc6VJFtnn4tQ/exec';
-
-async function gasGet(params){
-  const url = GAS_URL + '?' + new URLSearchParams(params).toString();
-  const r = await fetch(url);
-  return r.json();
-}
-
-async function gasPost(body){
-  const r = await fetch(GAS_URL, {
-    method: 'POST',
-    body: JSON.stringify(body)
+function buildHealthStrip(months){
+  const m = months[months.length-1];
+  const strip = document.getElementById('healthStrip');
+  let html = '<span class="hs-label">'+m+'</span>';
+  HEALTH_METRICS.forEach(({key,label,hi}) => {
+    const d = D[m][key]; if(!d) return;
+    const cs = colStr(d.a,d.b,hi);
+    const cls = cs==='none'?'none':cs;
+    const pct = pctVsBud(d.a,d.b);
+    const pctStr = pct!=null ? ' '+pct+'%' : '';
+    html += `<span class="hs-pill ${cls}"><span class="hs-dot"></span>${label}${pctStr}</span>`;
   });
-  return r.json();
+  strip.innerHTML = html;
 }
 
-async function loadExisting(platform, year, quarter){
-  try{
-    const rows = await gasGet({ action:'getScores', platform, year, quarter });
-    if(rows && rows.length > 0){
-      const d = rows[0];
-      return {
-        scores: d.scores || {},
-        comments: d.comments || {},
-        submitted: d.submitted === true || d.submitted === 'TRUE',
-        sectionTotals: d.section_totals || {},
-        overallScore: parseFloat(d.overall_score) || 0
-      };
-    }
-  }catch(e){ console.error('loadExisting error:', e); }
-  return null;
-}
+// ─── PERIOD SUMMARY BAND ────────────────────────────────────────────────────
+// Fully dynamic: reflects exactly the selected months.
+// Title & comparison copy adapts to how many months are selected.
+function buildR3Band(months){
+  const n = months.length;
+  const sum  = (ms, key) => ms.reduce((s,m)=>{ const v=D[m][key]?.a; return v!=null?s+v:s; }, 0);
+  const bsum = (ms, key) => ms.reduce((s,m)=>{ const v=D[m][key]?.b; return v!=null?s+v:s; }, 0);
 
-async function saveToStorage(submitted=false){
-  const payload = {
-    action: 'saveScore',
-    platform: state.platform,
-    year: state.year,
-    quarter: state.quarter,
-    scores: state.scores,
-    comments: state.comments,
-    submitted,
-    section_totals: computeSectionTotals(),
-    overall_score: computeOverall()
-  };
-  await gasPost(payload);
-  return payload;
-}
+  // For comparison: find the equivalent prior window (same length, immediately before)
+  const allIdx   = months.map(m => MONTHS.indexOf(m));
+  const minIdx   = Math.min(...allIdx);
+  const priorMos = MONTHS.slice(Math.max(0, minIdx - n), minIdx);
 
-// ─────────────────────────────────────────────
-// SETUP
-// ─────────────────────────────────────────────
-
-const SEED_SCORES = {
-  'Alpha': {
-    '2025-Q1': {'d1':2,'d2':2,'d3':1,'s1':3,'s2':3,'s3':1,'s4':4,'s5':2,'s6':3,'s7':3,'s8':3,'sc1':4,'sc2':4,'sc3':3,'sc4':3,'sc5':2,'sc6':3,'sc7':1,'p1':2,'p2':3,'p3':1,'p4':1,'p5':3,'p6':1,'p7':2,'p8':1,'pr1':1,'pr2':1,'pr3':3,'pr4':1,'pr5':1,'pd1':1,'pd2':3,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':2,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':1,'e4':2,'e5':1,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':3},
-    '2025-Q2': {'d1':2,'d2':2,'d3':1,'s1':3,'s2':4,'s3':2,'s4':4,'s5':3,'s6':3,'s7':3,'s8':3,'sc1':4,'sc2':4,'sc3':3,'sc4':3,'sc5':2,'sc6':3,'sc7':1,'p1':3,'p2':3,'p3':1,'p4':1,'p5':3,'p6':1,'p7':2,'p8':1,'pr1':1,'pr2':1,'pr3':1,'pr4':2,'pr5':2,'pd1':3,'pd2':3,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':3,'r4':1,'r5':1,'r6':3,'e1':3,'e2':2,'e3':1,'e4':2,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':3},
-    '2025-Q3': {'d1':2,'d2':1,'d3':1,'s1':2,'s2':3,'s3':2,'s4':4,'s5':3,'s6':3,'s7':3,'s8':3,'sc1':4,'sc2':4,'sc3':3,'sc4':3,'sc5':2,'sc6':3,'sc7':1,'p1':3,'p2':3,'p3':1,'p4':1,'p5':3,'p6':1,'p7':2,'p8':1,'pr1':1,'pr2':1,'pr3':1,'pr4':2,'pr5':2,'pd1':3,'pd2':3,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':3,'r4':1,'r5':1,'r6':3,'e1':3,'e2':2,'e3':1,'e4':3,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':2},
-    '2025-Q4': {'d1':2,'d2':1,'d3':1,'s1':2,'s2':3,'s3':2,'s4':4,'s5':3,'s6':3,'s7':3,'s8':3,'sc1':3,'sc2':3,'sc3':3,'sc4':3,'sc5':2,'sc6':3,'sc7':1,'p1':2,'p2':3,'p3':1,'p4':1,'p5':3,'p6':1,'p7':2,'p8':1,'pr1':1,'pr2':1,'pr3':1,'pr4':2,'pr5':2,'pd1':2,'pd2':3,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':2,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':1,'e4':2,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':2},
-  },
-  'Cascade': {
-    '2025-Q1': {'d1':3,'d2':3,'d3':3,'s1':2,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':3,'sc2':3,'sc3':3,'sc4':4,'sc5':3,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':2,'p4':2,'p5':4,'p6':4,'p7':4,'p8':4,'pr1':3,'pr2':2,'pr3':4,'pr4':5,'pr5':5,'pd1':3,'pd2':3,'pd3':4,'pd4':2,'r1':2,'r2':3,'r3':4,'r4':3,'r5':3,'r6':4,'e1':5,'e2':5,'e3':5,'e4':5,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':3,'re2':3,'re3':3},
-    '2025-Q2': {'d1':3,'d2':3,'d3':3,'s1':2,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':3,'sc2':3,'sc3':3,'sc4':4,'sc5':3,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':2,'p4':2,'p5':4,'p6':4,'p7':4,'p8':4,'pr1':3,'pr2':2,'pr3':4,'pr4':5,'pr5':5,'pd1':3,'pd2':3,'pd3':4,'pd4':2,'r1':2,'r2':3,'r3':4,'r4':3,'r5':3,'r6':4,'e1':5,'e2':5,'e3':5,'e4':5,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':3,'re2':3,'re3':3},
-    '2025-Q3': {'d1':3,'d2':3,'d3':3,'s1':2,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':3,'sc2':3,'sc3':3,'sc4':4,'sc5':3,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':2,'p4':2,'p5':4,'p6':4,'p7':4,'p8':4,'pr1':3,'pr2':2,'pr3':4,'pr4':5,'pr5':5,'pd1':3,'pd2':3,'pd3':4,'pd4':2,'r1':2,'r2':3,'r3':4,'r4':3,'r5':3,'r6':4,'e1':5,'e2':5,'e3':5,'e4':5,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':3,'re2':3,'re3':3},
-    '2025-Q4': {'d1':3,'d2':3,'d3':3,'s1':2,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':3,'sc2':3,'sc3':3,'sc4':4,'sc5':3,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':2,'p4':2,'p5':4,'p6':4,'p7':4,'p8':4,'pr1':3,'pr2':2,'pr3':4,'pr4':5,'pr5':5,'pd1':3,'pd2':3,'pd3':4,'pd4':2,'r1':2,'r2':3,'r3':4,'r4':3,'r5':3,'r6':4,'e1':5,'e2':5,'e3':5,'e4':5,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':3,'re2':3,'re3':3},
-  },
-  'Curb': {
-    '2025-Q1': {'d1':1,'d2':1,'d3':1,'s1':1,'s2':1,'s3':3,'s4':4,'s5':2,'s6':4,'s7':5,'s8':5,'sc1':4,'sc2':4,'sc3':2,'sc4':3,'sc5':2,'sc6':3,'sc7':3,'p1':3,'p2':4,'p3':2,'p4':2,'p5':2,'p6':3,'p7':3,'p8':3,'pr1':1,'pr2':3,'pr3':3,'pr4':3,'pr5':2,'pd1':3,'pd2':1,'pd3':1,'pd4':1,'r1':2,'r2':4,'r3':3,'r4':1,'r5':3,'r6':3,'e1':3,'e2':1,'e3':1,'e4':1,'e5':5,'e6':5,'ex1':5,'ex2':3,'ex3':1,'ex4':1,'re1':3},
-    '2025-Q2': {'d1':1,'d2':1,'d3':1,'s1':1,'s2':1,'s3':3,'s4':4,'s5':3,'s6':4,'s7':5,'s8':5,'sc1':4,'sc2':4,'sc3':2,'sc4':3,'sc5':2,'sc6':3,'sc7':3,'p1':3,'p2':4,'p3':2,'p4':2,'p5':2,'p6':3,'p7':3,'p8':3,'pr1':1,'pr2':3,'pr3':3,'pr4':3,'pr5':2,'pd1':3,'pd2':1,'pd3':1,'pd4':1,'r1':2,'r2':4,'r3':3,'r4':2,'r5':3,'r6':3,'e1':3,'e2':2,'e3':3,'e4':2,'e5':5,'e6':5,'ex1':5,'ex2':3,'ex3':1,'ex4':1,'re1':3},
-    '2025-Q3': {'d1':1,'d2':1,'d3':1,'s1':1,'s2':1,'s3':3,'s4':4,'s5':3,'s6':4,'s7':5,'s8':5,'sc1':4,'sc2':4,'sc3':2,'sc4':3,'sc5':2,'sc6':3,'sc7':3,'p1':4,'p2':4,'p3':2,'p4':2,'p5':2,'p6':3,'p7':3,'p8':3,'pr1':2,'pr2':4,'pr3':4,'pr4':3,'pr5':2,'pd1':3,'pd2':1,'pd3':1,'pd4':1,'r1':2,'r2':4,'r3':3,'r4':2,'r5':3,'r6':3,'e1':3,'e2':2,'e3':3,'e4':2,'e5':5,'e6':5,'ex1':5,'ex2':3,'ex3':1,'ex4':1,'re1':3},
-    '2025-Q4': {'d1':1,'d2':1,'d3':1,'s1':1,'s2':1,'s3':3,'s4':4,'s5':3,'s6':4,'s7':3,'s8':5,'sc1':4,'sc2':4,'sc3':2,'sc4':3,'sc5':2,'sc6':3,'sc7':3,'p1':3,'p2':4,'p3':1,'p4':1,'p5':2,'p6':3,'p7':3,'p8':3,'pr1':2,'pr2':1,'pr3':2,'pr4':3,'pr5':2,'pd1':3,'pd2':1,'pd3':1,'pd4':1,'r1':2,'r2':4,'r3':3,'r4':2,'r5':3,'r6':3,'e1':3,'e2':2,'e3':3,'e4':2,'e5':5,'e6':5,'ex1':5,'ex2':3,'ex3':1,'ex4':1,'re1':3},
-  },
-  'Fastest Labs': {
-    '2024-Q4': {'d1':3,'d2':2,'d3':4,'s1':2,'s2':1,'s3':1,'s4':4,'s5':2,'s6':3,'s7':4,'s8':3,'sc1':2,'sc2':2,'sc3':2,'sc4':1,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':1,'p3':1,'p4':1,'p5':1,'p6':1,'p7':1,'p8':1,'pr1':1,'pr2':3,'pr3':3,'pr4':4,'pr5':3,'pd1':1,'pd2':3,'pd3':2,'pd4':1,'r1':2,'r2':3,'r3':2,'r4':1,'r5':1,'r6':1,'e1':3,'e2':4,'e3':1,'e4':2,'e5':3,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':3,'re1':5,'re2':5,'re3':2},
-    '2025-Q1': {'d1':3,'d2':2,'d3':4,'s1':2,'s2':2,'s3':2,'s4':4,'s5':2,'s6':3,'s7':4,'s8':3,'sc1':3,'sc2':2,'sc3':2,'sc4':3,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':2,'p3':1,'p4':1,'p5':1,'p6':1,'p7':1,'p8':1,'pr1':1,'pr2':3,'pr3':3,'pr4':4,'pr5':3,'pd1':1,'pd2':3,'pd3':2,'pd4':1,'r1':2,'r2':3,'r3':3,'r4':2,'r5':1,'r6':1,'e1':3,'e2':4,'e3':1,'e4':2,'e5':3,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':3,'re1':3,'re2':3,'re3':3},
-    '2025-Q2': {'d1':3,'d2':3,'d3':4,'s1':2,'s2':3,'s3':3,'s4':4,'s5':2,'s6':4,'s7':4,'s8':3,'sc1':3,'sc2':3,'sc3':2,'sc4':3,'sc5':1,'sc6':1,'sc7':1,'p1':2,'p2':3,'p3':1,'p4':1,'p5':1,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':3,'pr3':3,'pr4':4,'pr5':3,'pd1':1,'pd2':3,'pd3':1,'pd4':1,'r1':2,'r2':3,'r3':3,'r4':2,'r5':1,'r6':1,'e1':3,'e2':4,'e3':1,'e4':2,'e5':3,'e6':2,'ex1':1,'ex2':1,'ex3':1,'ex4':3,'re1':1,'re2':1,'re3':3},
-    '2025-Q3': {'d1':3,'d2':3,'d3':4,'s1':3,'s2':3,'s3':4,'s4':4,'s5':3,'s6':4,'s7':4,'s8':3,'sc1':3,'sc2':3,'sc3':3,'sc4':3,'sc5':3,'sc6':2,'sc7':2,'p1':2,'p2':3,'p3':2,'p4':2,'p5':1,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':3,'pr3':3,'pr4':4,'pr5':2,'pd1':1,'pd2':3,'pd3':1,'pd4':1,'r1':2,'r2':3,'r3':3,'r4':2,'r5':1,'r6':1,'e1':3,'e2':4,'e3':1,'e4':2,'e5':3,'e6':2,'ex1':1,'ex2':1,'ex3':1,'ex4':3,'re1':1,'re2':1,'re3':3},
-    '2025-Q4': {'d1':3,'d2':3,'d3':4,'s1':4,'s2':4,'s3':4,'s4':4,'s5':3,'s6':4,'s7':4,'s8':3,'sc1':3,'sc2':3,'sc3':4,'sc4':4,'sc5':3,'sc6':2,'sc7':3,'p1':2,'p2':3,'p3':2,'p4':2,'p5':1,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':3,'pr3':3,'pr4':4,'pr5':2,'pd1':1,'pd2':3,'pd3':1,'pd4':1,'r1':2,'r2':3,'r3':3,'r4':2,'r5':1,'r6':1,'e1':3,'e2':4,'e3':1,'e4':2,'e5':3,'e6':3,'ex1':1,'ex2':1,'ex3':1,'ex4':3,'re1':2,'re2':1,'re3':3},
-  },
-  'Northpoint': {
-    '2025-Q1': {'d1':5,'d2':3,'d3':5,'s1':3,'s2':4,'s3':2,'s4':2,'s5':4,'s6':5,'s7':2,'s8':2,'sc1':3,'sc2':2,'sc3':1,'sc4':3,'sc5':1,'sc6':2,'sc7':2,'p1':4,'p2':4,'p3':3,'p4':3,'p5':1,'p6':1,'p7':1,'p8':4,'pr1':2,'pr2':4,'pr3':2,'pr4':2,'pr5':2,'pd1':2,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':1,'r3':3,'r4':3,'r5':2,'r6':3,'e1':3,'e2':3,'e3':2,'e4':4,'e5':4,'e6':2,'ex1':1,'ex2':1,'ex3':2},
-    '2025-Q2': {'d1':5,'d2':3,'d3':5,'s1':3,'s2':4,'s3':2,'s4':2,'s5':4,'s6':5,'s7':2,'s8':2,'sc1':3,'sc2':2,'sc3':1,'sc4':2,'sc5':1,'sc6':2,'sc7':2,'p1':4,'p2':4,'p3':3,'p4':3,'p5':1,'p6':1,'p7':1,'p8':4,'pr1':2,'pr2':4,'pr3':2,'pr4':2,'pr5':2,'pd1':3,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':1,'r3':3,'r4':3,'r5':2,'r6':3,'e1':3,'e2':3,'e3':2,'e4':4,'e5':4,'e6':2,'ex1':1,'ex2':1,'ex3':2},
-    '2025-Q3': {'d1':5,'d2':4,'d3':5,'s1':3,'s2':4,'s3':4,'s4':2,'s5':4,'s6':5,'s7':1,'s8':2,'sc1':3,'sc2':2,'sc3':1,'sc4':2,'sc5':1,'sc6':2,'sc7':4,'p1':4,'p2':4,'p3':3,'p4':3,'p5':1,'p6':3,'p7':1,'p8':4,'pr1':1,'pr2':4,'pr3':2,'pr4':2,'pr5':2,'pd1':3,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':1,'r3':3,'r4':3,'r5':2,'r6':3,'e1':3,'e2':3,'e3':2,'e4':4,'e5':4,'e6':2,'ex1':1,'ex2':1,'ex3':2},
-    '2025-Q4': {'d1':5,'d2':5,'d3':5,'s1':3,'s2':4,'s3':4,'s4':3,'s5':4,'s6':5,'s7':2,'s8':3,'sc1':5,'sc2':2,'sc3':1,'sc4':4,'sc5':1,'sc6':3,'sc7':4,'p1':4,'p2':4,'p3':4,'p4':3,'p5':1,'p6':3,'p7':1,'p8':2,'pr1':1,'pr2':4,'pr3':2,'pr4':3,'pr5':2,'pd1':3,'pd2':4,'pd3':2,'pd4':4,'r1':2,'r2':1,'r3':3,'r4':3,'r5':5,'r6':5,'e1':2,'e2':3,'e3':3,'e4':4,'e5':4,'e6':2,'ex1':1,'ex2':1,'ex3':2},
-  },
-  'Open Road': {
-    '2025-Q1': {'d1':4,'d2':3,'d3':5,'s1':3,'s2':3,'s3':4,'s4':5,'s5':5,'s6':3,'s7':5,'s8':5,'sc1':4,'sc2':3,'sc3':2,'sc4':2,'sc5':3,'sc6':3,'sc7':3,'p1':4,'p2':5,'p3':1,'p4':1,'p5':4,'p6':2,'p7':4,'p8':3,'pr1':5,'pr2':4,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':2,'r1':5,'r2':4,'r3':5,'r4':5,'r5':4,'r6':4,'e1':5,'e2':5,'e3':5,'e4':3,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':2,'re1':3,'re2':3,'re3':2},
-    '2025-Q2': {'d1':4,'d2':3,'d3':5,'s1':3,'s2':3,'s3':4,'s4':5,'s5':5,'s6':3,'s7':5,'s8':5,'sc1':4,'sc2':3,'sc3':2,'sc4':2,'sc5':3,'sc6':3,'sc7':3,'p1':4,'p2':5,'p3':1,'p4':1,'p5':4,'p6':2,'p7':4,'p8':3,'pr1':5,'pr2':4,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':2,'r1':5,'r2':4,'r3':5,'r4':5,'r5':4,'r6':4,'e1':5,'e2':5,'e3':5,'e4':3,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':2,'re1':3,'re2':3,'re3':2},
-    '2025-Q3': {'d1':4,'d2':3,'d3':5,'s1':3,'s2':3,'s3':4,'s4':5,'s5':5,'s6':3,'s7':5,'s8':5,'sc1':4,'sc2':3,'sc3':2,'sc4':2,'sc5':3,'sc6':3,'sc7':3,'p1':4,'p2':5,'p3':1,'p4':1,'p5':4,'p6':2,'p7':4,'p8':3,'pr1':5,'pr2':4,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':2,'r1':5,'r2':4,'r3':5,'r4':5,'r5':4,'r6':4,'e1':5,'e2':5,'e3':5,'e4':3,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':2,'re1':3,'re2':3,'re3':2},
-    '2025-Q4': {'d1':4,'d2':3,'d3':5,'s1':3,'s2':3,'s3':4,'s4':5,'s5':5,'s6':3,'s7':5,'s8':5,'sc1':4,'sc2':3,'sc3':2,'sc4':2,'sc5':3,'sc6':3,'sc7':3,'p1':4,'p2':5,'p3':1,'p4':1,'p5':4,'p6':2,'p7':4,'p8':3,'pr1':5,'pr2':4,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':2,'r1':5,'r2':4,'r3':5,'r4':5,'r5':4,'r6':4,'e1':5,'e2':5,'e3':5,'e4':3,'e5':5,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':2,'re1':3,'re2':3,'re3':2},
-  },
-  'Ramp': {
-    '2025-Q1': {'d1':2,'d2':2,'d3':2,'s1':3,'s2':4,'s3':1,'s4':3,'s5':4,'s6':4,'s7':2,'s8':1,'sc1':3,'sc2':2,'sc3':2,'sc4':3,'sc5':4,'sc6':2,'sc7':2,'p1':4,'p2':4,'p3':1,'p4':4,'p5':2,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':1,'pr3':1,'pr4':1,'pr5':3,'pd1':4,'pd2':3,'pd3':3,'pd4':4,'r1':2,'r2':4,'r3':1,'r4':3,'r5':1,'r6':1,'e1':4,'e2':4,'e3':1,'e4':4,'e5':1,'e6':1,'ex1':2,'ex2':2,'ex3':2,'ex4':2,'re1':3,'re2':1,'re3':3},
-    '2025-Q2': {'d1':2,'d2':2,'d3':2,'s1':3,'s2':4,'s3':1,'s4':3,'s5':4,'s6':4,'s7':2,'s8':1,'sc1':3,'sc2':2,'sc3':2,'sc4':2,'sc5':3,'sc6':1,'sc7':2,'p1':3,'p2':3,'p3':1,'p4':1,'p5':2,'p6':2,'p7':1,'p8':1,'pr1':2,'pr2':2,'pr3':1,'pr4':1,'pr5':3,'pd1':2,'pd2':2,'pd3':3,'pd4':1,'r1':2,'r2':1,'r3':1,'r4':1,'r5':1,'r6':1,'e1':4,'e2':4,'e3':1,'e4':3,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':3},
-    '2025-Q3': {'d1':2,'d2':2,'d3':2,'s1':3,'s2':4,'s3':1,'s4':3,'s5':4,'s6':4,'s7':2,'s8':1,'sc1':3,'sc2':2,'sc3':2,'sc4':2,'sc5':3,'sc6':1,'sc7':2,'p1':3,'p2':3,'p3':1,'p4':1,'p5':2,'p6':2,'p7':1,'p8':1,'pr1':2,'pr2':2,'pr3':1,'pr4':1,'pr5':3,'pd1':2,'pd2':2,'pd3':3,'pd4':1,'r1':2,'r2':1,'r3':1,'r4':1,'r5':1,'r6':1,'e1':4,'e2':4,'e3':1,'e4':3,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':3},
-    '2025-Q4': {'d1':2,'d2':2,'d3':2,'s1':3,'s2':4,'s3':1,'s4':2,'s5':3,'s6':3,'s7':2,'s8':1,'sc1':3,'sc2':2,'sc3':2,'sc4':3,'sc5':3,'sc6':1,'sc7':2,'p1':2,'p2':1,'p3':1,'p4':1,'p5':2,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':1,'pr3':1,'pr4':1,'pr5':2,'pd1':3,'pd2':2,'pd3':3,'pd4':1,'r1':1,'r2':1,'r3':3,'r4':2,'r5':1,'r6':1,'e1':4,'e2':4,'e3':1,'e4':4,'e5':1,'e6':1,'ex1':2,'ex2':2,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':2},
-  },
-  'REI': {
-    '2025-Q1': {'d1':4,'d2':3,'d3':2,'s1':3,'s2':3,'s3':1,'s4':4,'s5':4,'s6':3,'s7':3,'s8':4,'sc1':4,'sc2':2,'sc3':2,'sc4':3,'sc5':2,'sc6':2,'sc7':3,'p1':4,'p2':3,'p3':2,'p4':2,'p5':3,'p6':1,'p7':2,'p8':1,'pr1':3,'pr2':3,'pr3':4,'pr4':4,'pr5':3,'pd1':4,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':3,'r3':3,'r4':3,'r5':2,'r6':1,'e1':2,'e2':3,'e3':1,'e4':2,'e5':1,'e6':3,'ex1':4,'ex2':4,'ex3':4,'ex4':3,'re1':5,'re2':5,'re3':3},
-    '2025-Q2': {'d1':5,'d2':5,'d3':5,'s1':5,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':3,'sc3':2,'sc4':3,'sc5':2,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':3,'p4':3,'p5':3,'p6':2,'p7':4,'p8':5,'pr1':3,'pr2':3,'pr3':5,'pr4':5,'pr5':4,'pd1':4,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':3,'r3':5,'r4':3,'r5':3,'r6':3,'e1':2,'e2':3,'e3':1,'e4':3,'e5':1,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':5,'re2':5,'re3':3},
-    '2025-Q3': {'d1':5,'d2':5,'d3':5,'s1':5,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':3,'sc3':2,'sc4':3,'sc5':2,'sc6':2,'sc7':3,'p1':5,'p2':5,'p3':3,'p4':3,'p5':3,'p6':2,'p7':4,'p8':5,'pr1':3,'pr2':3,'pr3':5,'pr4':5,'pr5':4,'pd1':4,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':3,'r3':5,'r4':3,'r5':3,'r6':3,'e1':2,'e2':3,'e3':1,'e4':3,'e5':1,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':5,'re2':5,'re3':3},
-    '2025-Q4': {'d1':5,'d2':5,'d3':5,'s1':5,'s2':5,'s3':5,'s4':5,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':4,'sc3':3,'sc4':4,'sc5':3,'sc6':2,'sc7':4,'p1':5,'p2':5,'p3':4,'p4':4,'p5':3,'p6':3,'p7':4,'p8':5,'pr1':3,'pr2':3,'pr3':5,'pr4':5,'pr5':4,'pd1':4,'pd2':4,'pd3':4,'pd4':4,'r1':2,'r2':3,'r3':5,'r4':3,'r5':3,'r6':3,'e1':2,'e2':3,'e3':1,'e4':3,'e5':1,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':3,'re1':4,'re2':4,'re3':3},
-  },
-  'Rewind': {
-    '2025-Q4': {'d1':5,'d2':2,'d3':4,'s1':1,'s2':3,'s3':4,'s4':5,'s5':4,'s6':5,'s7':2,'s8':2,'sc1':4,'sc2':3,'sc3':2,'sc4':3,'sc5':2,'sc6':1,'sc7':2,'p1':4,'p2':1,'p3':1,'p4':1,'p5':3,'p6':3,'p7':3,'p8':1,'pr1':2,'pr2':1,'pr3':1,'pr4':1,'pr5':2,'pd1':1,'pd2':3,'pd3':4,'pd4':1,'r1':1,'r2':1,'r3':3,'r4':2,'r5':1,'r6':1,'e1':1,'e2':1,'e3':3,'e4':1,'e5':1,'e6':1,'ex1':5,'ex2':5,'ex3':4,'ex4':4,'re1':2,'re2':2,'re3':3},
-  },
-  'Ripple': {
-    '2025-Q1': {'d1':3,'d2':2,'d3':4,'s1':2,'s2':3,'s3':2,'s4':2,'s5':2,'s6':2,'s7':2,'s8':2,'sc1':1,'sc2':2,'sc3':2,'sc4':2,'sc5':2,'sc6':1,'sc7':2,'p1':2,'p2':2,'p3':1,'p4':1,'p5':2,'p6':1,'p7':1,'p8':1,'pr1':4,'pr2':4,'pr3':1,'pr4':1,'pr5':3,'pd1':1,'pd2':4,'pd3':4,'pd4':4,'r1':1,'r2':1,'r3':3,'r4':1,'r5':1,'r6':1,'e1':1,'e2':1,'e3':1,'e4':1,'e5':1,'e6':1,'ex1':4,'ex2':1,'ex3':1,'ex4':4,'re1':5,'re2':5,'re3':2},
-    '2025-Q2': {'d1':3,'d2':2,'d3':4,'s1':2,'s2':3,'s3':2,'s4':2,'s5':2,'s6':2,'s7':2,'s8':2,'sc1':3,'sc2':3,'sc3':3,'sc4':2,'sc5':2,'sc6':2,'sc7':2,'p1':4,'p2':2,'p3':1,'p4':1,'p5':2,'p6':1,'p7':2,'p8':1,'pr1':3,'pr2':4,'pr3':1,'pr4':1,'pr5':3,'pd1':1,'pd2':4,'pd3':4,'pd4':4,'r1':1,'r2':1,'r3':3,'r4':1,'r5':1,'r6':1,'e1':1,'e2':1,'e3':1,'e4':1,'e5':1,'e6':1,'ex1':4,'ex2':1,'ex3':2,'ex4':4,'re1':5,'re2':5,'re3':4},
-    '2025-Q3': {'d1':3,'d2':3,'d3':4,'s1':2,'s2':3,'s3':2,'s4':2,'s5':2,'s6':2,'s7':2,'s8':2,'sc1':3,'sc2':3,'sc3':3,'sc4':2,'sc5':2,'sc6':2,'sc7':2,'p1':4,'p2':2,'p3':1,'p4':1,'p5':2,'p6':1,'p7':2,'p8':1,'pr1':3,'pr2':4,'pr3':1,'pr4':1,'pr5':3,'pd1':1,'pd2':4,'pd3':4,'pd4':4,'r1':1,'r2':1,'r3':3,'r4':1,'r5':1,'r6':1,'e1':1,'e2':1,'e3':1,'e4':1,'e5':1,'e6':1,'ex1':4,'ex2':1,'ex3':2,'ex4':4,'re1':5,'re2':5,'re3':4},
-    '2025-Q4': {'d1':4,'d2':3,'d3':4,'s1':2,'s2':3,'s3':2,'s4':3,'s5':2,'s6':2,'s7':2,'s8':2,'sc1':3,'sc2':3,'sc3':3,'sc4':2,'sc5':2,'sc6':2,'sc7':2,'p1':4,'p2':2,'p3':1,'p4':1,'p5':2,'p6':1,'p7':2,'p8':1,'pr1':4,'pr2':4,'pr3':1,'pr4':1,'pr5':3,'pd1':1,'pd2':4,'pd3':4,'pd4':4,'r1':1,'r2':1,'r3':4,'r4':1,'r5':1,'r6':1,'e1':1,'e2':1,'e3':1,'e4':1,'e5':1,'e6':1,'ex1':4,'ex2':1,'ex3':2,'ex4':4,'re1':5,'re2':3,'re3':3},
-  },
-  'Total Seminars': {
-    '2025-Q1': {'d1':2,'d2':2,'d3':1,'s1':1,'s2':1,'s3':1,'s4':3,'s5':1,'s6':1,'s7':4,'s8':2,'sc1':1,'sc2':1,'sc3':1,'sc4':1,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':4,'p3':1,'p4':1,'p5':2,'p6':2,'p7':2,'p8':1,'pr1':2,'pr2':2,'pr3':3,'pr4':3,'pr5':2,'pd1':1,'pd2':2,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':1,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':3,'e4':1,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':2,'re1':1,'re2':1,'re3':1},
-    '2025-Q2': {'d1':1,'d2':1,'d3':2,'s1':1,'s2':1,'s3':3,'s4':3,'s5':1,'s6':1,'s7':4,'s8':2,'sc1':2,'sc2':2,'sc3':2,'sc4':1,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':2,'p3':1,'p4':1,'p5':2,'p6':2,'p7':2,'p8':1,'pr1':2,'pr2':2,'pr3':3,'pr4':3,'pr5':2,'pd1':3,'pd2':2,'pd3':2,'pd4':2,'r1':1,'r2':1,'r3':2,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':3,'e4':1,'e5':1,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':1},
-    '2025-Q3': {'d1':1,'d2':1,'d3':2,'s1':1,'s2':1,'s3':3,'s4':3,'s5':1,'s6':1,'s7':4,'s8':2,'sc1':2,'sc2':2,'sc3':2,'sc4':1,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':2,'p3':1,'p4':1,'p5':2,'p6':2,'p7':2,'p8':1,'pr1':2,'pr2':2,'pr3':3,'pr4':3,'pr5':2,'pd1':3,'pd2':2,'pd3':2,'pd4':2,'r1':1,'r2':1,'r3':2,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':3,'e4':1,'e5':1,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':1,'re1':1,'re2':1,'re3':1},
-    '2025-Q4': {'d1':3,'d2':3,'d3':2,'s1':1,'s2':1,'s3':3,'s4':3,'s5':1,'s6':1,'s7':4,'s8':2,'sc1':3,'sc2':3,'sc3':1,'sc4':1,'sc5':1,'sc6':1,'sc7':1,'p1':1,'p2':4,'p3':1,'p4':1,'p5':2,'p6':2,'p7':2,'p8':1,'pr1':2,'pr2':2,'pr3':3,'pr4':3,'pr5':3,'pd1':1,'pd2':2,'pd3':1,'pd4':1,'r1':1,'r2':1,'r3':2,'r4':1,'r5':1,'r6':3,'e1':2,'e2':2,'e3':3,'e4':1,'e5':2,'e6':1,'ex1':1,'ex2':1,'ex3':1,'ex4':2,'re1':1,'re2':1,'re3':1},
-  },
-  'United': {
-    '2025-Q1': {'d1':4,'d2':4,'d3':4,'s1':5,'s2':5,'s3':4,'s4':4,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':5,'sc3':3,'sc4':5,'sc5':4,'sc6':4,'sc7':2,'p1':3,'p2':3,'p3':3,'p4':4,'p5':3,'p6':5,'p7':5,'p8':5,'pr1':5,'pr2':5,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':4,'r1':3,'r2':4,'r3':5,'r4':4,'r5':3,'r6':5,'e1':5,'e2':4,'e3':4,'e4':4,'e5':4,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':5,'re1':5,'re2':5,'re3':4},
-    '2025-Q2': {'d1':4,'d2':4,'d3':4,'s1':5,'s2':5,'s3':4,'s4':4,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':5,'sc3':3,'sc4':5,'sc5':4,'sc6':4,'sc7':3,'p1':3,'p2':4,'p3':3,'p4':4,'p5':3,'p6':5,'p7':5,'p8':5,'pr1':5,'pr2':5,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':4,'r1':4,'r2':4,'r3':5,'r4':4,'r5':3,'r6':5,'e1':5,'e2':4,'e3':4,'e4':4,'e5':4,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':5,'re1':5,'re2':5,'re3':4},
-    '2025-Q3': {'d1':3,'d2':3,'d3':3,'s1':5,'s2':5,'s3':4,'s4':4,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':5,'sc3':3,'sc4':5,'sc5':4,'sc6':4,'sc7':3,'p1':3,'p2':4,'p3':3,'p4':3,'p5':3,'p6':5,'p7':5,'p8':5,'pr1':5,'pr2':5,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':4,'r1':4,'r2':4,'r3':5,'r4':4,'r5':3,'r6':5,'e1':5,'e2':4,'e3':4,'e4':4,'e5':4,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':5,'re1':3,'re2':3,'re3':4},
-    '2025-Q4': {'d1':4,'d2':4,'d3':3,'s1':5,'s2':5,'s3':4,'s4':4,'s5':5,'s6':5,'s7':5,'s8':5,'sc1':5,'sc2':5,'sc3':3,'sc4':5,'sc5':4,'sc6':4,'sc7':3,'p1':4,'p2':4,'p3':4,'p4':4,'p5':3,'p6':5,'p7':5,'p8':5,'pr1':5,'pr2':5,'pr3':5,'pr4':5,'pr5':5,'pd1':5,'pd2':4,'pd3':5,'pd4':4,'r1':4,'r2':4,'r3':5,'r4':4,'r5':3,'r6':5,'e1':5,'e2':4,'e3':4,'e4':4,'e5':4,'e6':5,'ex1':5,'ex2':5,'ex3':5,'ex4':5,'re1':2,'re2':2,'re3':3},
-  },
-  'Urgent': {
-    '2025-Q1': {'d1':5,'d2':4,'d3':5,'s1':3,'s2':5,'s3':3,'s4':4,'s5':5,'s6':5,'s7':2,'s8':2,'sc1':4,'sc2':3,'sc3':2,'sc4':4,'sc5':3,'sc6':1,'sc7':4,'p1':2,'p2':2,'p3':1,'p4':1,'p5':2,'p6':1,'p7':1,'p8':1,'pr1':2,'pr2':1,'pr3':1,'pr4':1,'pr5':2,'pd1':1,'pd2':4,'pd3':2,'pd4':2,'r1':2,'r2':3,'r3':5,'r4':2,'r5':2,'r6':4,'e1':2,'e2':1,'e3':1,'e4':1,'e5':3,'e6':1,'ex1':2,'ex2':3,'ex3':2,'ex4':2,'re1':1,'re2':1,'re3':2},
-    '2025-Q2': {'d1':5,'d2':4,'d3':4,'s1':3,'s2':5,'s3':3,'s4':5,'s5':5,'s6':5,'s7':3,'s8':2,'sc1':5,'sc2':3,'sc3':3,'sc4':4,'sc5':3,'sc6':1,'sc7':4,'p1':3,'p2':2,'p3':1,'p4':1,'p5':3,'p6':1,'p7':1,'p8':1,'pr1':3,'pr2':2,'pr3':2,'pr4':1,'pr5':2,'pd1':1,'pd2':4,'pd3':2,'pd4':2,'r1':2,'r2':2,'r3':5,'r4':2,'r5':1,'r6':4,'e1':1,'e2':1,'e3':1,'e4':2,'e5':3,'e6':1,'ex1':2,'ex2':4,'ex3':2,'ex4':3,'re1':3,'re2':1,'re3':2},
-    '2025-Q3': {'d1':5,'d2':4,'d3':4,'s1':3,'s2':5,'s3':3,'s4':5,'s5':5,'s6':5,'s7':4,'s8':2,'sc1':5,'sc2':3,'sc3':4,'sc4':4,'sc5':3,'sc6':1,'sc7':4,'p1':3,'p2':2,'p3':1,'p4':1,'p5':3,'p6':1,'p7':1,'p8':1,'pr1':4,'pr2':2,'pr3':2,'pr4':1,'pr5':2,'pd1':1,'pd2':4,'pd3':3,'pd4':2,'r1':2,'r2':2,'r3':5,'r4':1,'r5':1,'r6':4,'e1':1,'e2':1,'e3':1,'e4':1,'e5':3,'e6':1,'ex1':1,'ex2':4,'ex3':2,'ex4':3,'re1':2,'re2':1,'re3':3},
-    '2025-Q4': {'d1':4,'d2':4,'d3':3,'s1':3,'s2':5,'s3':3,'s4':5,'s5':5,'s6':5,'s7':4,'s8':2,'sc1':3,'sc2':3,'sc3':4,'sc4':4,'sc5':4,'sc6':1,'sc7':3,'p1':3,'p2':2,'p3':1,'p4':1,'p5':3,'p6':1,'p7':1,'p8':1,'pr1':4,'pr2':2,'pr3':2,'pr4':1,'pr5':2,'pd1':1,'pd2':4,'pd3':3,'pd4':2,'r1':2,'r2':2,'r3':5,'r4':1,'r5':1,'r6':5,'e1':1,'e2':1,'e3':1,'e4':2,'e5':2,'e6':1,'ex1':1,'ex2':3,'ex3':2,'ex4':3,'re1':2,'re2':1,'re3':3},
-  },
-  'Zollege': {
-    '2024-Q3': {'d1':2,'d2':2,'d3':2,'s1':2,'s2':2,'s3':1,'s4':3,'s5':3,'s6':2,'s7':2,'s8':2,'sc1':3,'sc2':3,'sc3':3,'sc4':3,'sc5':2,'sc6':2,'sc7':2,'p1':1,'p2':2,'p3':2,'p4':2,'p5':2,'p6':2,'p7':2,'p8':2,'pr1':2,'pr2':3,'pr3':2,'pr4':3,'pr5':3,'pd1':1,'pd2':1,'pd3':2,'pd4':1,'r1':3,'r2':3,'r3':3,'r4':2,'r5':1,'r6':3,'e1':2,'e2':2,'e3':2,'e4':1,'e5':1,'e6':1,'ex1':1,'ex2':1,'ex3':2,'ex4':1,'re1':3,'re2':3,'re3':2},
-    '2024-Q4': {'d1':3,'d2':3,'d3':4,'s1':2,'s2':4,'s3':2,'s4':4,'s5':4,'s6':4,'s7':4,'s8':2,'sc1':4,'sc2':4,'sc3':3,'sc4':4,'sc5':3,'sc6':4,'sc7':2,'p1':1,'p2':4,'p3':3,'p4':3,'p5':3,'p6':3,'p7':4,'p8':3,'pr1':3,'pr2':4,'pr3':3,'pr4':4,'pr5':3,'pd1':1,'pd2':1,'pd3':3,'pd4':1,'r1':4,'r2':4,'r3':4,'r4':2,'r5':1,'r6':3,'e1':3,'e2':3,'e3':3,'e4':1,'e5':1,'e6':1,'ex1':2,'ex2':1,'ex3':2,'ex4':3,'re1':5,'re2':5,'re3':2},
-    '2025-Q1': {'d1':3,'d2':3,'d3':3,'s1':3,'s2':4,'s3':4,'s4':5,'s5':5,'s6':5,'s7':4,'s8':3,'sc1':5,'sc2':5,'sc3':3,'sc4':5,'sc5':5,'sc6':5,'sc7':4,'p1':2,'p2':5,'p3':5,'p4':5,'p5':4,'p6':3,'p7':5,'p8':4,'pr1':4,'pr2':4,'pr3':4,'pr4':4,'pr5':3,'pd1':3,'pd2':3,'pd3':4,'pd4':5,'r1':4,'r2':4,'r3':5,'r4':3,'r5':1,'r6':4,'e1':3,'e2':4,'e3':4,'e4':3,'e5':2,'e6':3,'ex1':4,'ex2':3,'ex3':3,'ex4':5,'re1':5,'re2':4,'re3':2},
-    '2025-Q2': {'d1':4,'d2':3,'d3':3,'s1':3,'s2':5,'s3':4,'s4':5,'s5':5,'s6':5,'s7':4,'s8':3,'sc1':5,'sc2':5,'sc3':4,'sc4':5,'sc5':5,'sc6':5,'sc7':4,'p1':3,'p2':5,'p3':5,'p4':5,'p5':4,'p6':3,'p7':5,'p8':4,'pr1':4,'pr2':4,'pr3':4,'pr4':4,'pr5':4,'pd1':3,'pd2':3,'pd3':5,'pd4':5,'r1':4,'r2':4,'r3':5,'r4':4,'r5':2,'r6':4,'e1':3,'e2':4,'e3':4,'e4':3,'e5':3,'e6':3,'ex1':4,'ex2':3,'ex3':4,'ex4':5,'re1':5,'re2':4,'re3':3},
-    '2025-Q3': {'d1':4,'d2':3,'d3':3,'s1':3,'s2':4,'s3':4,'s4':5,'s5':5,'s6':5,'s7':5,'s8':4,'sc1':5,'sc2':5,'sc3':4,'sc4':5,'sc5':5,'sc6':5,'sc7':4,'p1':4,'p2':5,'p3':5,'p4':4,'p5':3,'p6':4,'p7':5,'p8':4,'pr1':4,'pr2':5,'pr3':4,'pr4':5,'pr5':4,'pd1':3,'pd2':3,'pd3':5,'pd4':5,'r1':4,'r2':4,'r3':5,'r4':4,'r5':2,'r6':4,'e1':3,'e2':4,'e3':4,'e4':3,'e5':3,'e6':3,'ex1':4,'ex2':3,'ex3':4,'ex4':5,'re1':5,'re2':5,'re3':3},
-    '2025-Q4': {'d1':4,'d2':3,'d3':4,'s1':4,'s2':4,'s3':4,'s4':5,'s5':5,'s6':5,'s7':5,'s8':4,'sc1':5,'sc2':5,'sc3':4,'sc4':5,'sc5':5,'sc6':5,'sc7':4,'p1':4,'p2':5,'p3':5,'p4':4,'p5':4,'p6':4,'p7':5,'p8':4,'pr1':4,'pr2':5,'pr3':4,'pr4':5,'pr5':4,'pd1':3,'pd2':3,'pd3':5,'pd4':5,'r1':4,'r2':4,'r3':5,'r4':4,'r5':2,'r6':4,'e1':3,'e2':4,'e3':4,'e4':3,'e5':3,'e6':3,'ex1':4,'ex2':3,'ex3':4,'ex4':5,'re1':5,'re2':5,'re3':3},
-  },
-};
-
-// Quarters with pre-existing scores from LP First records — treated as locked
-const SEED_LOCKED = {
-  United:           ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Ripple:           ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Ramp:             ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  'Total Seminars': ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  'Open Road':      ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Cascade:          ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Alpha:            ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  'Fastest Labs':   ['2024-Q4','2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Northpoint:       ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Urgent:           ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Zollege:          ['2024-Q3','2024-Q4','2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  REI:              ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Curb:             ['2025-Q1','2025-Q2','2025-Q3','2025-Q4'],
-  Rewind:           ['2025-Q4'],
-};
-
-function isSeedLocked(platform, year, quarter){
-  const key = `${year}-${quarter}`;
-  return (SEED_LOCKED[platform] || []).includes(key);
-}
-
-document.getElementById('platform-sel').addEventListener('change', checkExisting);
-document.getElementById('year-sel').addEventListener('change', checkExisting);
-document.getElementById('q-sel').addEventListener('change', checkExisting);
-
-async function checkExisting(){
-  const p = document.getElementById('platform-sel').value;
-  const y = document.getElementById('year-sel').value;
-  const q = document.getElementById('q-sel').value;
-  if(!p) return;
-  const ex = await loadExisting(p, y, q);
-  const isLocked = isSeedLocked(p, y, q) || (ex && ex.submitted);
-  const isDraft  = !isLocked && ex && !ex.submitted;
-  document.getElementById('existing-note').style.display = isDraft ? 'block' : 'none';
-  document.getElementById('locked-note').style.display   = isLocked ? 'block' : 'none';
-  document.querySelector('.btn-start').disabled = isLocked;
-  document.querySelector('.btn-start').style.opacity = isLocked ? '0.4' : '1';
-  document.querySelector('.btn-start').style.cursor  = isLocked ? 'not-allowed' : 'pointer';
-}
-
-async function startScorecard(){
-  const p = document.getElementById('platform-sel').value;
-  const y = document.getElementById('year-sel').value;
-  const q = document.getElementById('q-sel').value;
-  if(!p){ showToast('Please select your platform','warning'); return; }
-  if(isSeedLocked(p, y, q)){ showToast('This quarter is locked','warning'); return; }
-  state.platform = p;
-  state.year = y;
-  state.quarter = q;
-
-  const existing = await loadExisting(p, y, q);
-  if(existing){
-    state.scores = existing.scores || {};
-    state.comments = existing.comments || {};
-    state.submitted = existing.submitted || false;
-  }
-
-  // load prior quarter for reference
-  state.priorScores = {};
-  state.priorPeriod = '';
-  const allPeriods = [
-    ['2024','Q1'],['2024','Q2'],['2024','Q3'],['2024','Q4'],
-    ['2025','Q1'],['2025','Q2'],['2025','Q3'],['2025','Q4'],
-    ['2026','Q1'],['2026','Q2'],['2026','Q3'],['2026','Q4'],
-    ['2027','Q1'],['2027','Q2'],['2027','Q3'],['2027','Q4']
+  const metrics = [
+    {key:'leads',       label:'Leads',        fmt:fShort},
+    {key:'enrollments', label:'Enrollments',   fmt:fN},
+    {key:'bookings',    label:'Bookings',      fmt:fK},
+    {key:'starts',      label:'Starts',        fmt:fN},
+    {key:'efs',         label:'Enr for Start', fmt:fN},
+    {key:'classStarts', label:'Class Starts',  fmt:fN},
   ];
-  const curIdx = allPeriods.findIndex(([yr,qt])=>yr===y&&qt===q);
-  if(curIdx > 0){
-    // walk backwards to find the most recent quarter with scores
-    for(let i = curIdx - 1; i >= 0; i--){
-      const [pyr,pqt] = allPeriods[i];
-      const seedPrev = `${pyr}-${pqt}`;
-      // check seed data first (most reliable for historical quarters)
-      if(SEED_SCORES[p]?.[seedPrev]){
-        state.priorScores = SEED_SCORES[p][seedPrev];
-        state.priorPeriod = `${pqt} ${pyr}`;
-        break;
-      }
-      // then check Google Sheets for app-submitted quarters
-      const prior = await loadExisting(p, pyr, pqt);
-      if(prior && prior.scores && Object.keys(prior.scores).length > 0){
-        state.priorScores = prior.scores;
-        state.priorPeriod = `${pqt} ${pyr}`;
-        break;
-      }
-    }
-  }
 
-  // build full score history — seed data first, then any app-submitted quarters from GAS
-  state.scoreHistory = [];
-
-  // batch load all submitted quarters for this platform from GAS in one call
-  let gasSubmissions = {};
-  try{
-    const rows = await gasGet({ action:'getScores', platform: p });
-    if(rows && Array.isArray(rows)){
-      for(const r of rows){
-        const key = `${r.year}-${r.quarter}`;
-        if(r.scores && typeof r.scores === 'object') gasSubmissions[key] = r.scores;
-      }
-    }
-  }catch(e){}
-
-  for(const [hyr,hqt] of allPeriods){
-    const hkey = `${hyr}-${hqt}`;
-    if(hkey === `${y}-${q}`) break; // stop before current quarter
-    // seed data takes priority (verified from uploaded files)
-    const seedScores = SEED_SCORES[p]?.[hkey];
-    if(seedScores && Object.keys(seedScores).length > 0){
-      state.scoreHistory.push({ period:`${hqt} ${hyr}`, scores: seedScores });
-    } else if(gasSubmissions[hkey] && Object.keys(gasSubmissions[hkey]).length > 0){
-      state.scoreHistory.push({ period:`${hqt} ${hyr}`, scores: gasSubmissions[hkey] });
-    }
-    // platforms with no history for this quarter simply don't get a column
-  }
-
-  document.getElementById('setup-screen').classList.add('hidden');
-  document.getElementById('scorecard-wrap').classList.remove('hidden');
-  document.getElementById('action-bar').classList.remove('hidden');
-  document.getElementById('quarter-badge').textContent = `${q} ${y}`;
-  document.getElementById('sc-platform-name').textContent = p;
-  document.getElementById('sc-quarter-tag').textContent = `${q} ${y} · LBS Scorecard`;
-
-  // always reset to grade tab
-  switchTab('grade');
-
-  // show copy-prior button if prior scores exist and current quarter is empty
-  const hasCurrentScores = Object.keys(state.scores).length > 0;
-  const hasPrior = Object.keys(state.priorScores).length > 0;
-  const copyBtn = document.getElementById('copy-prior-btn');
-  if(hasPrior && !hasCurrentScores){
-    copyBtn.style.display = 'inline-flex';
-    copyBtn.textContent = `↩ Keep ${state.priorPeriod} Scores`;
+  // Title logic
+  let bandTitle, rangeLabel;
+  if (n === 1) {
+    bandTitle  = 'Monthly Summary';
+    rangeLabel = months[0];
+  } else if (n <= 3) {
+    bandTitle  = n+'-Month Summary';
+    rangeLabel = months[0] + ' – ' + months[n-1];
   } else {
-    copyBtn.style.display = 'none';
+    bandTitle  = 'Period Summary — '+n+' Months';
+    rangeLabel = months[0] + ' – ' + months[n-1];
   }
 
-  if(state.submitted){
-    document.getElementById('submitted-banner').classList.remove('hidden');
-  }
+  // Comparison label
+  const cmpLabel = priorMos.length
+    ? 'vs prior '+priorMos.length+'mo'
+    : '';
 
-  renderCatSummary();
-  renderHistPanel();
-  renderSections();
-  refreshTotals();
-}
+  let items = metrics.map(({key, label, fmt}) => {
+    const a  = sum(months, key);
+    const b  = bsum(months, key);
+    const pp = priorMos.length ? sum(priorMos, key) : null;
+    const dir   = pp!=null ? (a>pp?'up':a<pp?'dn':'fl') : 'fl';
+    const arrow = dir==='up'?'▲':dir==='dn'?'▼':'—';
+    const pctB  = b ? Math.round((a/b)*100) : null;
+    const diff  = pp!=null ? Math.abs(a-pp) : null;
+    return `<div class="r3-item">
+      <div class="r3-lbl">${label}</div>
+      <div class="r3-val">${fmt(a)}</div>
+      <div class="r3-vs ${dir}">${diff!=null ? arrow+' '+fmt(diff)+' '+cmpLabel : '—'}</div>
+      <div class="r3-sub">${pctB!=null ? pctB+'% of budget' : ''}</div>
+    </div>`;
+  }).join('');
 
-// ─────────────────────────────────────────────
-// HISTORY
-// ─────────────────────────────────────────────
-const HIST = {
-  Zollege: [
-    {period:'Q3 2024',score:74},{period:'Q4 2024',score:104.6},
-    {period:'Q1 2025',score:135},{period:'Q2 2025',score:142.2},
-    {period:'Q3 2025',score:144.8},{period:'Q4 2025',score:146.8}
-  ]
-};
-
-async function renderHistory(){
-  const hist = [];
-  const quarters = ['Q1','Q2','Q3','Q4'];
-  const years = ['2024','2025'];
-  for(const yr of years){
-    for(const qt of quarters){
-      if(yr==='2024' && (qt==='Q1'||qt==='Q2')) continue;
-      if(yr===state.year && qt===state.quarter) break;
-      try{
-        const rows = await gasGet({action:'getScores', platform:state.platform, year:yr, quarter:qt});
-        if(rows && rows.length > 0 && rows[0].overall_score) hist.push({period:`${qt} ${yr}`, score:parseFloat(rows[0].overall_score)});
-      }catch(e){}
-    }
-  }
-  // merge with known history
-  const known = HIST[state.platform] || [];
-  const all = [...known];
-  for(const h of hist){
-    if(!all.find(x=>x.period===h.period)) all.push(h);
-  }
-  all.sort((a,b)=>a.period.localeCompare(b.period));
-
-  if(all.length === 0){
-    document.getElementById('history-strip').style.display = 'none';
-    return;
-  }
-  document.getElementById('history-strip').style.display = 'block';
-  const max = Math.max(...all.map(h=>h.score), 1);
-  const bars = document.getElementById('history-bars');
-  bars.innerHTML = all.map((h,i)=>`
-    <div class="h-bar-wrap">
-      <div class="h-score">${Math.round(h.score)}</div>
-      <div class="h-bar${i===all.length-1?' current':''}" style="height:${Math.round((h.score/max)*40)+4}px"></div>
-      <div class="h-period">${h.period}</div>
+  return `<div class="r3-band anim">
+    <div class="r3-head">
+      <span class="r3-title">${bandTitle}</span>
+      <span class="r3-range">${rangeLabel}</span>
     </div>
-  `).join('');
+    <div class="r3-grid">${items}</div>
+  </div>`;
 }
 
-// ─────────────────────────────────────────────
-// COMPUTE
-// ─────────────────────────────────────────────
-function computeSectionTotals(){
-  const totals = {};
-  for(const sec of SECTIONS){
-    let raw = 0;
-    for(const sg of sec.subgroups)
-      for(const obj of sg.objectives)
-        raw += (state.scores[obj.id] || 0);
-    totals[sec.id] = { raw, weighted: parseFloat((raw * sec.weightVal).toFixed(2)) };
-  }
-  return totals;
-}
+// ─── KPI CARD ────────────────────────────────────────────────────────────────
+// RATE_KEYS: averaged across period. All others: summed.
+const RATE_KEYS = new Set(['lte','ets','capUtil','completion','etc','studPerClass','asp']);
 
-function computeOverall(){
-  const t = computeSectionTotals();
-  return parseFloat(Object.values(t).reduce((a,v)=>a+v.weighted,0).toFixed(1));
-}
-
-function maxOverall(){
-  return SECTIONS.reduce((a,s)=>a + s.maxRaw * s.weightVal, 0);
-}
-
-// ─────────────────────────────────────────────
-// RENDER
-// ─────────────────────────────────────────────
-function switchTab(tab){
-  document.getElementById('tab-content-grade').classList.toggle('hidden', tab!=='grade');
-  document.getElementById('tab-content-history').classList.toggle('hidden', tab!=='history');
-  document.getElementById('tab-grade').classList.toggle('active', tab==='grade');
-  document.getElementById('tab-history').classList.toggle('active', tab==='history');
-}
-
-function renderHistPanel(){
-  const tbl = document.getElementById('hist-table');
-
-  // For platforms with no history at all, show a single N/A column
-  if(!state.scoreHistory || state.scoreHistory.length === 0){
-    let html = `<thead><tr><th class="obj-col">Objective</th><th style="color:var(--ink4)">No prior history</th></tr></thead><tbody>`;
-    for(const sec of SECTIONS){
-      html += `<tr class="sec-row"><td colspan="2">${sec.name}</td></tr>`;
-      for(const obj of sec.subgroups.flatMap(sg=>sg.objectives)){
-        html += `<tr><td class="obj-name">${obj.label}</td><td><span class="hs hs-0">N/A</span></td></tr>`;
-      }
-    }
-    tbl.innerHTML = html + '</tbody>';
-    return;
-  }
-
-  const periods = state.scoreHistory.map(h=>h.period);
-  let html = `<thead><tr><th class="obj-col">Objective</th>${periods.map(p=>`<th>${p}</th>`).join('')}</tr></thead><tbody>`;
-  for(const sec of SECTIONS){
-    html += `<tr class="sec-row"><td colspan="${periods.length+1}">${sec.name}</td></tr>`;
-    for(const obj of sec.subgroups.flatMap(sg=>sg.objectives)){
-      const cells = periods.map((_,i)=>{
-        const s = state.scoreHistory[i]?.scores?.[obj.id];
-        if(!s || s === 0) return `<td><span class="hs hs-0">—</span></td>`;
-        return `<td><span class="hs hs-${s}">${s}</span></td>`;
-      }).join('');
-      html += `<tr><td class="obj-name">${obj.label}</td>${cells}</tr>`;
-    }
-  }
-  tbl.innerHTML = html + '</tbody>';
-}
-
-function renderCatSummary(){
-  const wrap = document.getElementById('cat-summary');
-  wrap.innerHTML = SECTIONS.map(sec=>{
-    const tot = computeSectionTotals();
-    const pct = sec.maxRaw > 0 ? tot[sec.id].raw / (sec.maxRaw) : 0;
-    return `<div class="cat-bar-item">
-      <div class="cat-bar-name">${sec.name}</div>
-      <div class="cat-bar-score" style="color:${pct>.75?'var(--teal)':pct>.4?'var(--blue)':'var(--ink3)'}">${tot[sec.id].weighted.toFixed(1)}</div>
-      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round(pct*100)}%;background:${pct>.75?'var(--teal)':pct>.4?'var(--blue)':'var(--rule2)'}"></div></div>
-    </div>`;
-  }).join('');
-}
-
-function renderSections(){
-  const wrap = document.getElementById('sections-wrap');
-  wrap.innerHTML = '';
-  SECTIONS.forEach((sec,idx)=>{
-    const el = document.createElement('div');
-    el.className = 'section-card';
-    el.id = `sec-card-${sec.id}`;
-
-    const wtClass = sec.weight==='High'?'wt-high':sec.weight==='Medium'?'wt-med':'wt-low';
-    const totals = computeSectionTotals();
-
-    const allObjs = sec.subgroups.flatMap(sg=>sg.objectives);
-    const bodyHtml = sec.subgroups.map(sg=>`
-      <div class="subgroup">
-        <div class="subgroup-name">${sg.name}${state.priorPeriod?`<span style="float:right;font-size:10px;color:var(--ink3);font-weight:400;text-transform:none;letter-spacing:0">${state.priorPeriod} scores shown</span>`:''}</div>
-        ${sg.objectives.map(obj=>{
-          const prior = state.priorScores[obj.id];
-          const priorBadge = prior != null
-            ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--paper3);color:var(--ink3);flex-shrink:0" title="Prior quarter: ${state.priorPeriod}">Prior: ${prior}</span>`
-            : '';
-          return `
-          <div class="obj-row" id="obj-${obj.id}">
-            <div class="obj-top">
-              <div class="obj-label">${obj.label}</div>
-              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-                ${priorBadge}
-                <div class="score-row">
-                  ${[1,2,3,4,5].map(n=>`<button class="s-btn${state.scores[obj.id]===n?` sel-${n}`:''}" data-obj="${obj.id}" data-score="${n}" onclick="setScore('${obj.id}',${n})">${n}</button>`).join('')}
-                </div>
-              </div>
-            </div>
-            <div class="criteria-bar">
-              <div class="criteria-pill criteria-1"><div class="criteria-label">Score 1</div>${obj.c1}</div>
-              <div class="criteria-pill criteria-5"><div class="criteria-label">Score 5</div>${obj.c5}</div>
-            </div>
-            <div class="obj-comment">
-              <textarea class="comment-in" placeholder="Add comment (optional)…" oninput="setComment('${obj.id}',this.value)">${state.comments[obj.id]||''}</textarea>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    `).join('');
-
-    el.innerHTML = `
-      <div class="section-head" onclick="toggleSection('${sec.id}')">
-        <div class="section-head-left">
-          <div class="section-num">${idx+1}</div>
-          <div class="section-title">${sec.name}</div>
-          <span class="section-wt ${wtClass}">${sec.weight}</span>
-        </div>
-        <div class="section-head-right">
-          <span class="section-pts" id="sec-pts-${sec.id}">${totals[sec.id].weighted.toFixed(1)}</span>
-          <span class="section-pts-max">/ ${(sec.maxRaw*sec.weightVal).toFixed(0)}</span>
-          <span class="section-arrow" id="sec-arrow-${sec.id}">▾</span>
-        </div>
-      </div>
-      <div class="section-body collapsible-content" id="sec-body-${sec.id}" style="display:none">
-        ${bodyHtml}
-      </div>
-    `;
-    wrap.appendChild(el);
-  });
-}
-
-function toggleSection(id){
-  const body = document.getElementById(`sec-body-${id}`);
-  const arrow = document.getElementById(`sec-arrow-${id}`);
-  const isOpen = body.style.display !== 'none';
-  body.style.display = isOpen ? 'none' : 'block';
-  arrow.classList.toggle('open', !isOpen);
-}
-
-function setScore(objId, score){
-  state.scores[objId] = score;
-  // update buttons
-  document.querySelectorAll(`[data-obj="${objId}"]`).forEach(btn=>{
-    btn.className = `s-btn${parseInt(btn.dataset.score)===score?` sel-${score}`:''}`;
-  });
-  refreshTotals();
-}
-
-function setComment(objId, val){
-  state.comments[objId] = val;
-}
-
-function refreshTotals(){
-  const totals = computeSectionTotals();
-  const overall = computeOverall();
-  const max = maxOverall();
-
-  document.getElementById('dial-value').textContent = overall.toFixed(1);
-  document.getElementById('dial-max').textContent = Math.round(max);
-  document.getElementById('dial-fill').style.width = Math.round((overall/max)*100)+'%';
-
-  for(const sec of SECTIONS){
-    const el = document.getElementById(`sec-pts-${sec.id}`);
-    if(el) el.textContent = totals[sec.id].weighted.toFixed(1);
-  }
-
-  const allObjs = SECTIONS.flatMap(s=>s.subgroups.flatMap(sg=>sg.objectives));
-  const scored = allObjs.filter(o=>state.scores[o.id]>0).length;
-  document.getElementById('ab-scored').textContent = scored;
-  document.getElementById('ab-total').textContent = allObjs.length;
-
-  renderCatSummary();
-}
-
-// ─────────────────────────────────────────────
-// ACTIONS
-// ─────────────────────────────────────────────
-async function saveDraft(){
-  await saveToStorage(false);
-  showToast('Draft saved');
-}
-
-async function submitScorecard(){
-  const allObjs = SECTIONS.flatMap(s=>s.subgroups.flatMap(sg=>sg.objectives));
-  const scored = allObjs.filter(o=>state.scores[o.id]>0).length;
-  if(scored < allObjs.length * 0.8){
-    showToast(`${allObjs.length - scored} objectives still unscored`, 'warning');
-    return;
-  }
-  await saveToStorage(true);
-  state.submitted = true;
-  await showPostSubmit();
-}
-
-function goBackToScorecard(){
-  document.getElementById('post-submit').style.display='none';
-  document.getElementById('scorecard-wrap').classList.remove('hidden');
-  document.getElementById('action-bar').classList.remove('hidden');
-  document.getElementById('submitted-banner').classList.remove('hidden');
-  if(window._psChart){ window._psChart.destroy(); window._psChart=null; }
-}
-
-async function showPostSubmit(){
-  document.getElementById('scorecard-wrap').classList.add('hidden');
-  document.getElementById('action-bar').classList.add('hidden');
-  const ps = document.getElementById('post-submit');
-  ps.style.display='block';
-  window.scrollTo(0,0);
-
-  const overall = computeOverall();
-  const totals = computeSectionTotals();
-  const q = `${state.quarter} ${state.year}`;
-  document.getElementById('ps-title').textContent = `${state.platform} — ${q}`;
-  document.getElementById('ps-sub').textContent = `Submitted to LP First Capital`;
-  document.getElementById('ps-score-big').textContent = overall.toFixed(1);
-
-  // category summary grid
-  document.getElementById('ps-cat-grid').innerHTML = SECTIONS.map(sec=>{
-    const w = totals[sec.id].weighted;
-    const max = sec.maxRaw * sec.weightVal;
-    const pct = max>0 ? w/max : 0;
-    const col = pct>.75?'var(--teal)':pct>.4?'var(--blue)':'var(--amber)';
-    return `<div class="ps-cat">
-      <div class="ps-cat-name">${sec.name}</div>
-      <div class="ps-cat-score" style="color:${col}">${w.toFixed(1)}</div>
-      <div class="ps-cat-max">of ${max.toFixed(0)}</div>
-      <div class="ps-cat-bar"><div class="ps-cat-fill" style="width:${Math.round(pct*100)}%;background:${col}"></div></div>
-    </div>`;
-  }).join('');
-
-  // ── history chart ──
-  // Compute overall score for each seeded quarter from SEED_SCORES
-  const PERIOD_ORDER = ['2024-Q3','2024-Q4','2025-Q1','2025-Q2','2025-Q3','2025-Q4','2026-Q1','2026-Q2','2026-Q3','2026-Q4'];
-  const histMap = {};
-
-  // Pull from seed data — compute overall from objective scores
-  const seedPlatform = SEED_SCORES[state.platform] || {};
-  for(const [qkey, scores] of Object.entries(seedPlatform)){
-    let total = 0;
-    for(const sec of SECTIONS){
-      let raw = 0;
-      for(const sg of sec.subgroups)
-        for(const obj of sg.objectives)
-          raw += (scores[obj.id] || 0);
-      total += raw * sec.weightVal;
-    }
-    histMap[qkey] = parseFloat(total.toFixed(1));
-  }
-
-  // Pull from storage for any app-submitted quarters
-  const allStoragePeriods = PERIOD_ORDER;
-  for(const period of allStoragePeriods){
-    const [yr, qt] = period.split('-');
-    try{
-      const rows = await gasGet({action:'getScores', platform:state.platform, year:yr, quarter:qt});
-      if(rows && rows.length > 0 && rows[0].overall_score) histMap[period] = parseFloat(rows[0].overall_score);
-    }catch(e){}
-  }
-
-  // Always include current submission
-  const curKey = `${state.year}-${state.quarter}`;
-  histMap[curKey] = overall;
-
-  // Sort by period order and filter to only periods with data
-  const histEntries = PERIOD_ORDER
-    .filter(k => histMap[k] != null)
-    .map(k => ({ period: k, score: histMap[k] }));
-
-  const periodLabel = k => {
-    const [yr, qt] = k.split('-');
-    return `${qt} ${yr}`;
+function periodAgg(months, key) {
+  const isRate = RATE_KEYS.has(key);
+  const aVals = months.map(mo => D[mo][key]?.a).filter(v => v != null);
+  const bVals = months.map(mo => D[mo][key]?.b).filter(v => v != null);
+  const pyVals = months.map(mo => D[mo][key]?.py).filter(v => v != null);
+  if (!aVals.length) return { a: null, b: null, py: null };
+  const agg = arr => isRate
+    ? arr.reduce((s, v) => s + v, 0) / arr.length
+    : arr.reduce((s, v) => s + v, 0);
+  return {
+    a:  agg(aVals),
+    b:  bVals.length ? agg(bVals) : null,
+    py: pyVals.length ? agg(pyVals) : null,
+    isRate,
+    n: months.length
   };
+}
 
-  if(window._psChart){ window._psChart.destroy(); window._psChart = null; }
-  const ctx = document.getElementById('ps-history-chart').getContext('2d');
-  const isCurrent = histEntries.map(e => e.period === curKey);
-  window._psChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: histEntries.map(e => periodLabel(e.period)),
-      datasets: [{
-        data: histEntries.map(e => e.score),
-        borderColor: '#1a5fa8',
-        borderWidth: 2.5,
-        fill: true,
-        backgroundColor: 'rgba(26,95,168,.07)',
-        tension: 0.35,
-        pointBackgroundColor: histEntries.map((e,i) => isCurrent[i] ? '#1a5fa8' : '#fff'),
-        pointBorderColor: '#1a5fa8',
-        pointBorderWidth: 2,
-        pointRadius: histEntries.map((e,i) => isCurrent[i] ? 7 : 4),
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `LBS Score: ${ctx.raw}` } }
-      },
-      scales: {
-        y: { min: 0, suggestedMax: 200, grid: { color: 'rgba(0,0,0,.04)' }, ticks: { font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-      }
+function mkCard(m, key, label, fmt, hi=true, months){
+  const isMulti = months.length > 1;
+  const agg = periodAgg(months, key);
+  if (agg.a == null) return `<div class="kcard cb anim"><div class="klabel">${label}</div><div class="kvalue" style="font-size:18px;color:var(--muted2)">—</div></div>`;
+
+  const cc  = colClass(agg.a, agg.b, hi);
+  const pct = pctVsBud(agg.a, agg.b);
+  const dir = dirLabel(agg.a, agg.b, hi);
+  const sc  = sparkColor(cc);
+  const spark = months.map(mo => D[mo][key]?.a ?? null);
+  const sparkId = 'sp_' + key + '_' + months.join('').replace(/\s/g,'');
+  setTimeout(() => { const c = document.getElementById(sparkId); if (c) drawSparkline(c, spark, sc); }, 80);
+
+  const aggNote = isMulti
+    ? `<div style="font-size:9px;color:var(--muted2);margin-top:1px">${agg.isRate ? 'avg' : 'sum'} · ${months.length} months</div>`
+    : '';
+
+  return `<div class="kcard ${cc} anim">
+    <div class="klabel">${label}</div>
+    <div class="kcard-top">
+      <div>
+        <div class="kvalue">${fmt(agg.a)}</div>
+        <div class="kdelta ${dir}">${dir==='up'?'▲':dir==='dn'?'▼':'—'} ${vsText(agg.a, agg.b, fmt)} vs bgt</div>
+        <div class="kbud">Bgt: ${agg.b != null ? fmt(agg.b) : '—'}</div>
+        ${aggNote}
+      </div>
+      <canvas id="${sparkId}" class="sparkline-wrap"></canvas>
+    </div>
+    ${pct != null ? `<div class="kprog"><div class="kprog-fill ${cc}" style="width:${Math.min(pct,100)}%"></div></div>` : ''}
+  </div>`;
+}
+
+// ─── FUNNEL VIZ ──────────────────────────────────────────────────────────────
+// When multiple months selected: sum actuals, sum budgets across the period
+function mkFunnel(m, months){
+  const stages = [
+    {key:'leads', label:'Leads', color:'#1565C0', fmt:fN},
+    {key:'enrollments', label:'Enrollments', color:'#1976D2', fmt:fN},
+    {key:'efs', label:'Enrolls for Start', color:'#0288D1', fmt:fN},
+    {key:'starts', label:'Student Starts', color:'#0097A7', fmt:fN},
+  ];
+  const convs = [
+    {label:'Lead-to-Enroll', key:'lte', fmt:fP},
+    {label:'Enroll-to-Start', key:'ets', fmt:fP},
+  ];
+  const isMulti = months.length > 1;
+  // For multi-month: sum volumes, average rates
+  const sumA = key => months.reduce((s,mo)=>{ const v=D[mo][key]?.a; return v!=null?s+v:s; },0);
+  const sumB = key => months.reduce((s,mo)=>{ const v=D[mo][key]?.b; return v!=null?s+v:s; },0);
+  const avgA = key => { const vs=months.map(mo=>D[mo][key]?.a).filter(v=>v!=null); return vs.length ? vs.reduce((a,b)=>a+b)/vs.length : null; };
+  const avgB = key => { const vs=months.map(mo=>D[mo][key]?.b).filter(v=>v!=null); return vs.length ? vs.reduce((a,b)=>a+b)/vs.length : null; };
+
+  const getA = (key, isRate) => isMulti ? (isRate ? avgA(key) : sumA(key)) : D[m][key]?.a;
+  const getB = (key, isRate) => isMulti ? (isRate ? avgB(key) : sumB(key)) : D[m][key]?.b;
+
+  const leadA = getA('leads', false) || 1;
+  let html = '';
+  stages.forEach((s,i) => {
+    const a = getA(s.key, false); const b = getB(s.key, false);
+    if(a==null) return;
+    const barW = Math.round((a/leadA)*100);
+    const budW = b ? Math.round((b/leadA)*100) : null;
+    const col = colClass(a, b, true);
+    html += `<div class="funnel-stage">
+      <div class="funnel-stage-head">
+        <span class="funnel-stage-name">${s.label}</span>
+        <div class="funnel-stage-nums">
+          <span class="funnel-stage-val" style="color:${col==='cg'?'#2e7d32':col==='ca'?'#e65100':col==='cr'?'#c62828':'#071e3d'}">${s.fmt(a)}</span>
+          <span class="funnel-stage-bud">/ ${b!=null?s.fmt(b):'—'} bgt ${b?'('+Math.round((a/b)*100)+'%)':''}</span>
+        </div>
+      </div>
+      <div class="funnel-bar-track" style="position:relative;">
+        ${budW!=null?`<div style="position:absolute;top:0;left:0;height:100%;width:${Math.min(budW,100)}%;background:rgba(21,101,192,0.18);border-radius:5px;"></div>`:''}
+        <div class="funnel-bar-fill" style="width:${Math.min(barW,100)}%;background:${s.color};position:relative;z-index:1"></div>
+      </div>
+    </div>`;
+    if(i < convs.length){
+      const ca = getA(convs[i].key, true); const cb = getB(convs[i].key, true);
+      if(ca==null) return;
+      const cdir = dirLabel(ca,cb,true);
+      html += `<div class="funnel-conv">
+        <span class="funnel-conv-arrow">↓</span>
+        <span class="funnel-conv-label">${convs[i].label}</span>
+        <span class="funnel-conv-val" style="color:${cdir==='up'?'#2e7d32':cdir==='dn'?'#c62828':'#1565C0'}">${convs[i].fmt(ca)}</span>
+        <span class="funnel-conv-bud">bgt ${cb!=null?convs[i].fmt(cb):'—'}</span>
+      </div>`;
     }
   });
-  document.getElementById('ps-detail').innerHTML = SECTIONS.map(sec=>{
-    const w = totals[sec.id].weighted;
-    const max = sec.maxRaw * sec.weightVal;
-    const allObjs = sec.subgroups.flatMap(sg=>sg.objectives);
-    const objRows = allObjs.map(obj=>{
-      const s = state.scores[obj.id] || 0;
-      const c = state.comments[obj.id] || '';
-      return `<div class="ps-obj-row">
-        <div>
-          <div class="ps-obj-label">${obj.label}</div>
-          ${c ? `<div class="ps-obj-comment">${c}</div>` : ''}
-        </div>
-        <div class="ps-score-badge ps-s-${s}">${s||'—'}</div>
-      </div>`;
-    }).join('');
-    return `<div class="ps-sec-card">
-      <div class="ps-sec-head">
-        <div class="ps-sec-name">${sec.name} <span style="font-size:11px;font-weight:500;color:var(--ink3);margin-left:6px">${sec.weight} weight</span></div>
-        <div><span class="ps-sec-pts">${w.toFixed(1)}</span><span class="ps-sec-pts-max">/ ${max.toFixed(0)}</span></div>
+  const title = isMulti ? `Enrollment Funnel — ${months[0]} – ${months[months.length-1]}` : `Enrollment Funnel — ${m}`;
+  const note = isMulti ? `<div style="font-size:9px;color:var(--muted2);margin-bottom:10px">Volumes summed · rates averaged · light bar = budget</div>` : '';
+  return `<div class="funnel-card anim"><div class="funnel-title">${title}</div>${note}${html}</div>`;
+}
+
+// ─── ETC / COMPLETION CALLOUT ─────────────────────────────────────────────────
+// months = selected period; latest month drives the headline numbers
+function mkOutcomeCallout(m, months){
+  // Avg across selected period if multi-month
+  const avgA = key => { const vs=months.map(mo=>D[mo][key]?.a).filter(v=>v!=null); return vs.length ? vs.reduce((a,b)=>a+b)/vs.length : null; };
+  const avgB = key => { const vs=months.map(mo=>D[mo][key]?.b).filter(v=>v!=null); return vs.length ? vs.reduce((a,b)=>a+b)/vs.length : null; };
+  const isMulti = months.length > 1;
+  const compA = isMulti ? avgA('completion') : D[m]['completion']?.a;
+  const compB = isMulti ? avgB('completion') : D[m]['completion']?.b;
+  const etcA  = isMulti ? avgA('etc')        : D[m]['etc']?.a;
+  const etcB  = isMulti ? avgB('etc')        : D[m]['etc']?.b;
+  const compPct = pctVsBud(compA, compB);
+  const etcPct  = pctVsBud(etcA,  etcB);
+  const compOk  = compPct!=null ? (compPct>=95?'ok':compPct>=85?'warn':'bad') : 'warn';
+  const etcOk   = etcPct!=null  ? (etcPct>=95?'ok':etcPct>=85?'warn':'bad')  : 'warn';
+  const overallOk = (compOk==='bad'||etcOk==='bad') ? 'At Risk' : (compOk==='warn'||etcOk==='warn') ? 'Watch' : 'On Track';
+  const alertCls = overallOk==='At Risk'?'warn':overallOk==='Watch'?'warn':'ok';
+  const compSparkId = 'sp_oc_comp'; const etcSparkId = 'sp_oc_etc';
+  // Only render sparklines when more than one month is selected
+  if (isMulti) {
+    setTimeout(()=>{
+      const c1=document.getElementById(compSparkId); const c2=document.getElementById(etcSparkId);
+      if(c1) drawSparkline(c1, months.map(mo=>D[mo]['completion']?.a??null), '#2e7d32');
+      if(c2) drawSparkline(c2, months.map(mo=>D[mo]['etc']?.a??null), '#e65100');
+    },80);
+  }
+  const trendLabel = months.length+'-month trend';
+  const subLabel = isMulti ? `<div style="font-size:9px;color:var(--muted2);margin-bottom:4px">Avg across ${months.length} selected months</div>` : '';
+  const trendBlock = (sparkId) => isMulti
+    ? `<div class="oc-trend"><div class="oc-trend-label">${trendLabel}</div><canvas id="${sparkId}" class="oc-sparkbig"></canvas></div>`
+    : '';
+  return `<div class="outcome-callout anim">
+    <div class="oc-header">
+      <span class="oc-title">Student Outcomes — Completion &amp; ETC</span>
+      <span class="oc-alert ${alertCls}">${overallOk}</span>
+    </div>
+    ${subLabel}
+    <div class="oc-grid">
+      <div class="oc-metric">
+        <div class="oc-m-label">Completion Rate</div>
+        <div class="oc-m-val ${compOk}">${compA!=null?fP(compA):'—'}</div>
+        <div class="oc-m-row">Budget <span>${compB!=null?fP(compB):'—'}</span> &nbsp;|&nbsp; Attainment <span>${compPct!=null?compPct+'%':'—'}</span></div>
+
+        ${trendBlock(compSparkId)}
       </div>
-      ${objRows}
-    </div>`;
+      <div class="oc-metric">
+        <div class="oc-m-label">Enroll-to-Completion (ETC)</div>
+        <div class="oc-m-val ${etcOk}">${etcA!=null?fP(etcA):'—'}</div>
+        <div class="oc-m-row">Budget <span>${etcB!=null?fP(etcB):'—'}</span> &nbsp;|&nbsp; Attainment <span>${etcPct!=null?etcPct+'%':'—'}</span></div>
+
+        ${trendBlock(etcSparkId)}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── SINGLE VIEW ─────────────────────────────────────────────────────────────
+function renderSingle(months){
+  const m = months[months.length-1];
+  const periodLabel = months.length === 1 ? m : months[0] + ' – ' + m;
+  return `
+    ${buildR3Band(months)}
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Enrollment Funnel &amp; Outcomes — ${periodLabel}</div><div class="sec-line"></div></div>
+    <div class="funnel-row">
+      ${mkFunnel(m, months)}
+      ${mkOutcomeCallout(m, months)}
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Marketing &amp; Sales — ${periodLabel}</div><div class="sec-line"></div></div>
+    <div class="kgrid g4">
+      ${mkCard(m,'leads','Leads',fN,true,months)}
+      ${mkCard(m,'lte','Lead-to-Enroll %',fP,true,months)}
+      ${mkCard(m,'enrollments','Enrollments',fN,true,months)}
+      ${mkCard(m,'bookings','Bookings ($k)',fK,true,months)}
+    </div>
+    <div class="kgrid g4" style="margin-top:9px">
+      ${mkCard(m,'asp','Avg Sale Price',fD,true,months)}
+      ${mkCard(m,'efs','Enrolls for Start',fN,true,months)}
+      ${mkCard(m,'ets','Enroll-to-Start %',fP,true,months)}
+      ${mkCard(m,'starts','Student Starts',fN,true,months)}
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Operations — ${periodLabel}</div><div class="sec-line"></div></div>
+    <div class="kgrid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:9px">
+      ${mkCard(m,'capacity','Capacity',fN,true,months)}
+      ${mkCard(m,'classStarts','Class Starts',fN,true,months)}
+      ${mkCard(m,'studPerClass','Students / Class',v=>fN(v,1),true,months)}
+    </div>
+    <div class="kgrid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:9px">
+      ${mkCard(m,'capUtil','Cap Utilization %',fP,true,months)}
+      ${mkCard(m,'completion','Completion Rate',fP,true,months)}
+      ${mkCard(m,'etc','Enroll-to-Completion %',fP,true,months)}
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Budget Attainment — ${periodLabel}</div><div class="sec-line"></div></div>
+    <div class="ccards cc2">
+      <div class="ccard"><div class="ccard-title">Sales metrics vs budget</div><div class="ccard-sub">Actual as % of budget · green ≥95%, amber ≥80%, red &lt;80% · dashed line = 100%</div><div style="position:relative;height:200px"><canvas id="budSales"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Ops metrics vs budget</div><div class="ccard-sub">Actual as % of budget · dashed line = 100% target</div><div style="position:relative;height:200px"><canvas id="budOps"></canvas></div></div>
+    </div>
+  `;
+}
+
+// ─── TREND VIEW ───────────────────────────────────────────────────────────────
+function renderTrend(months){
+  const sumLeads = months.reduce((s,m)=>s+(D[m].leads?.a||0),0);
+  const sumEnroll = months.reduce((s,m)=>s+(D[m].enrollments?.a||0),0);
+  const sumStarts = months.reduce((s,m)=>s+(D[m].starts?.a||0),0);
+  const sumBook = months.reduce((s,m)=>s+(D[m].bookings?.a||0),0);
+  const avgEtc = months.map(m=>D[m].etc?.a).filter(v=>v!=null);
+  const etcAvg = avgEtc.length ? (avgEtc.reduce((a,b)=>a+b)/avgEtc.length).toFixed(1) : '—';
+  return `
+    <div class="r3-band anim" style="margin-bottom:1.25rem">
+      <div class="r3-head"><span class="r3-title">Period Totals — ${months.length} months selected</span></div>
+      <div class="r3-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="r3-item"><div class="r3-lbl">Total Leads</div><div class="r3-val">${fShort(sumLeads)}</div><div class="r3-sub">avg ${fN(Math.round(sumLeads/months.length))}/mo</div></div>
+        <div class="r3-item"><div class="r3-lbl">Total Enrollments</div><div class="r3-val">${fN(sumEnroll)}</div><div class="r3-sub">avg ${fN(Math.round(sumEnroll/months.length))}/mo</div></div>
+        <div class="r3-item"><div class="r3-lbl">Total Starts</div><div class="r3-val">${fN(sumStarts)}</div><div class="r3-sub">avg ${fN(Math.round(sumStarts/months.length))}/mo</div></div>
+        <div class="r3-item"><div class="r3-lbl">Total Bookings</div><div class="r3-val">${fK(sumBook)}</div><div class="r3-sub">avg ${fK(Math.round(sumBook/months.length))}/mo</div></div>
+        <div class="r3-item"><div class="r3-lbl">Avg ETC Rate</div><div class="r3-val">${etcAvg}%</div><div class="r3-sub">across ${months.length} months</div></div>
+      </div>
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Volume Trends</div><div class="sec-line"></div></div>
+    <div class="ccards cc2">
+      <div class="ccard">
+        <div class="ccard-title">Leads, Enrollments &amp; Starts</div>
+        <div class="clegend"><span class="leg"><span class="leg-sq" style="background:#1565C0"></span>Leads actual</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5"></span>Leads budget</span><span class="leg"><span class="leg-sq" style="background:#29B6F6"></span>Enrollments</span><span class="leg"><span class="leg-sq" style="background:#1b5e20"></span>Starts</span></div>
+        <div style="position:relative;height:220px"><canvas id="tFunnel"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ccard-title">Bookings &amp; Avg Sale Price</div>
+        <div class="clegend"><span class="leg"><span class="leg-sq" style="background:#1565C0"></span>Bookings actual</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5"></span>Bookings budget</span><span class="leg"><span class="leg-sq" style="background:#f57c00"></span>ASP actual</span><span class="leg"><span class="leg-sq" style="background:#ffe0b2;border:1px dashed #f57c00"></span>ASP budget</span></div>
+        <div style="position:relative;height:220px"><canvas id="tBookings"></canvas></div>
+      </div>
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Conversion Rates</div><div class="sec-line"></div></div>
+    <div class="ccards cc3">
+      <div class="ccard"><div class="ccard-title">Lead-to-Enroll %</div><div class="clegend"><span class="leg"><span class="leg-sq" style="background:#1565C0"></span>Actual</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5;border:1px dashed #1565C0"></span>Budget</span></div><div style="position:relative;height:160px"><canvas id="tLte"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Enroll-to-Start %</div><div class="clegend"><span class="leg"><span class="leg-sq" style="background:#29B6F6"></span>Actual</span><span class="leg"><span class="leg-sq" style="background:#b3e0f9;border:1px dashed #29B6F6"></span>Budget</span></div><div style="position:relative;height:160px"><canvas id="tEts"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Completion &amp; ETC %</div><div class="clegend"><span class="leg"><span class="leg-sq" style="background:#2e7d32"></span>Completion</span><span class="leg"><span class="leg-sq" style="background:#f57c00"></span>ETC</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5;border:1px dashed #666"></span>Budget lines</span></div><div style="position:relative;height:160px"><canvas id="tOutcomes"></canvas></div></div>
+    </div>
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Operations Trends</div><div class="sec-line"></div></div>
+    <div class="ccards cc3">
+      <div class="ccard"><div class="ccard-title">Capacity Utilization %</div><div class="clegend"><span class="leg"><span class="leg-sq" style="background:#1565C0"></span>Actual</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5;border:1px dashed #1565C0"></span>Budget</span></div><div style="position:relative;height:148px"><canvas id="tCapUtil"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Class Starts</div><div class="clegend"><span class="leg"><span class="leg-sq" style="background:#1565C0"></span>Actual</span><span class="leg"><span class="leg-sq" style="background:#b3d4f5"></span>Budget</span></div><div style="position:relative;height:148px"><canvas id="tClassStarts"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Students per Class Start</div><div style="position:relative;height:160px"><canvas id="tSpc"></canvas></div></div>
+    </div>
+  `;
+}
+
+// ─── TABLE VIEW ───────────────────────────────────────────────────────────────
+function renderTable(months){
+  const mkTd = (m,key,fmt,hi=true) => {
+    const d=D[m][key]; if(!d||d.a==null) return `<td class="cell-na">—</td>`;
+    const cc=colStr(d.a,d.b,hi);
+    const pct=pctVsBud(d.a,d.b);
+    const dir=dirLabel(d.a,d.b,hi);
+    const bgCls = cc==='green'?'tc-g':cc==='amber'?'tc-a':cc==='red'?'tc-r':'';
+    const badge = pct!=null ? (cc==='green'?`<span class="badge-g">${pct}%</span>`:cc==='amber'?`<span class="badge-a">${pct}%</span>`:`<span class="badge-r">${pct}%</span>`) : '';
+    return `<td class="${bgCls}"><span class="cell-num">${fmt(d.a)}</span>${badge}</td>`;
+  };
+  const ROWS = [
+    {section:'MARKETING & SALES'},
+    {label:'Leads',key:'leads',fmt:fN},
+    {label:'Lead-to-Enroll %',key:'lte',fmt:fP},
+    {label:'Enrollments',key:'enrollments',fmt:fN},
+    {label:'Bookings ($k)',key:'bookings',fmt:fK},
+    {label:'Avg Sale Price',key:'asp',fmt:fD},
+    {label:'Enrolls for Start',key:'efs',fmt:fN},
+    {label:'Enroll-to-Start %',key:'ets',fmt:fP},
+    {label:'Student Starts',key:'starts',fmt:fN},
+    {section:'OPERATIONS'},
+    {label:'Active Schools',key:'activeSchools',fmt:fN},
+    {label:'Class Weeks',key:'classWeeks',fmt:fN},
+    {label:'Capacity',key:'capacity',fmt:fN},
+    {label:'Class Starts',key:'classStarts',fmt:fN},
+    {label:'Students / Class',key:'studPerClass',fmt:v=>fN(v,1)},
+    {label:'Cap Utilization %',key:'capUtil',fmt:fP},
+    {label:'Completion Rate',key:'completion',fmt:fP},
+    {label:'ETC %',key:'etc',fmt:fP},
+  ];
+  const hdr = months.map(m=>`<th>${m.replace(' ','<br>')}</th>`).join('');
+  const body = ROWS.map(r => {
+    if(r.section) return `<tr class="sec-row"><td colspan="${months.length+1}">${r.section}</td></tr>`;
+    return `<tr><td>${r.label}</td>${months.map(m=>mkTd(m,r.key,r.fmt)).join('')}</tr>`;
+  }).join('');
+  return `
+    <div class="sec"><div class="sec-line"></div><div class="sec-title">Full Scorecard — All Metrics &amp; Months</div><div class="sec-line"></div></div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px">Cell color = % of budget attainment &nbsp;·&nbsp; <span style="background:#e8f5e9;color:#1b5e20;padding:1px 5px;border-radius:3px">green</span> ≥95% &nbsp; <span style="background:#fff3e0;color:#e65100;padding:1px 5px;border-radius:3px">amber</span> ≥80% &nbsp; <span style="background:#ffebee;color:#c62828;padding:1px 5px;border-radius:3px">red</span> &lt;80%</div>
+    <div class="twrap"><div class="tscroll"><table class="sc"><thead><tr><th>Metric</th>${hdr}</tr></thead><tbody>${body}</tbody></table></div></div>
+  `;
+}
+
+// ─── CHART RENDERING ─────────────────────────────────────────────────────────
+function renderCharts(months){
+  const act = key => months.map(m => D[m][key]?.a ?? null);
+  const bud = key => months.map(m => D[m][key]?.b ?? null);
+  const barCols = months.map((m,i) => i===months.length-1?'#1565C0':'#90CAF9');
+  const lo = (mn,mx,pct) => ({ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{ x:{grid:{display:false},ticks:{font:{size:10},color:'#607d9a'}},
+             y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#607d9a',callback:v=>pct?v+'%':v.toLocaleString()}, ...(mn!=null?{min:mn}:{}), ...(mx!=null?{max:mx}:{}) } } });
+
+  if(view==='single'){
+    const m = months[months.length-1];
+    // Use periodAgg for all aggregation — consistent with cards
+    const isMulti = months.length > 1;
+    const getA = (key) => periodAgg(months, key).a;
+    const getB = (key) => periodAgg(months, key).b;
+
+    const allSales = [
+      {k:'leads',l:'Leads'},{k:'lte',l:'LTE %'},{k:'enrollments',l:'Enrollments'},
+      {k:'bookings',l:'Bookings'},{k:'asp',l:'ASP'},{k:'efs',l:'Enr/Start'},
+      {k:'ets',l:'ETS %'},{k:'starts',l:'Starts'}
+    ];
+    const allOps = [
+      {k:'capacity',l:'Capacity'},{k:'classStarts',l:'Cls Starts'},
+      {k:'studPerClass',l:'Stu/Class'},{k:'capUtil',l:'Cap Util %'},
+      {k:'completion',l:'Completion'},{k:'etc',l:'ETC %'}
+    ];
+
+    const buildPctData = (pairs) => {
+      const filtered = pairs.filter(({k})=>{ const a=getA(k); const b=getB(k); return a!=null&&b!=null&&b>0; });
+      return {
+        labels: filtered.map(({l})=>l),
+        vals:   filtered.map(({k})=>Math.round((getA(k)/getB(k))*100)),
+        colors: filtered.map(({k})=>{ const v=Math.round((getA(k)/getB(k))*100); return v>=95?'#2e7d32':v>=80?'#e65100':'#c62828'; })
+      };
+    };
+
+    const sd = buildPctData(allSales);
+    const od = buildPctData(allOps);
+
+    const refDataset = (n) => ({
+      type:'line', data: Array(n).fill(100),
+      borderColor:'rgba(0,0,0,0.2)', borderDash:[5,4], borderWidth:1.5,
+      pointRadius:0, label:'100% target', fill:false, tension:0
+    });
+
+    const attainOpts = {...lo(0,135,false), plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>c.datasetIndex===0?c.raw+'% of budget':'100% budget target'}}}};
+
+    const c1=new Chart(document.getElementById('budSales'),{type:'bar',data:{labels:sd.labels,datasets:[{data:sd.vals,backgroundColor:sd.colors,borderRadius:5},refDataset(sd.labels.length)]},options:attainOpts});
+    const c2=new Chart(document.getElementById('budOps'),  {type:'bar',data:{labels:od.labels,datasets:[{data:od.vals,backgroundColor:od.colors,borderRadius:5},refDataset(od.labels.length)]},options:attainOpts});
+    charts.push(c1,c2); return;
+  }
+
+  if(view==='trend'){
+    const c1=new Chart(document.getElementById('tFunnel'),{type:'bar',data:{labels:months,datasets:[
+      {label:'Leads budget',data:bud('leads'),backgroundColor:'rgba(21,101,192,0.18)',borderRadius:2},
+      {label:'Leads actual',data:act('leads'),backgroundColor:'#1565C0',borderRadius:2},
+      {type:'line',label:'Enrollments',data:act('enrollments'),borderColor:'#29B6F6',backgroundColor:'transparent',tension:0.3,pointRadius:3,yAxisID:'y2'},
+      {type:'line',label:'Starts',data:act('starts'),borderColor:'#1b5e20',backgroundColor:'transparent',tension:0.3,pointRadius:3,yAxisID:'y2'},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#607d9a'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#607d9a'}},y2:{position:'right',grid:{display:false},ticks:{font:{size:10},color:'#607d9a'}}}}});
+    const c2=new Chart(document.getElementById('tBookings'),{type:'bar',data:{labels:months,datasets:[
+      {label:'Bookings budget',data:bud('bookings'),backgroundColor:'rgba(21,101,192,0.18)',borderRadius:3},
+      {label:'Bookings actual',data:act('bookings'),backgroundColor:'#1565C0',borderRadius:3},
+      {type:'line',label:'ASP budget',data:bud('asp'),borderColor:'rgba(245,124,0,0.4)',backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5,yAxisID:'y2'},
+      {type:'line',label:'ASP actual',data:act('asp'),borderColor:'#f57c00',backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2,yAxisID:'y2'},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#607d9a'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#607d9a'}},y2:{position:'right',grid:{display:false},ticks:{font:{size:10},color:'#607d9a'}}}}});
+    const mkL=(id,aKey,bKey,ac,bc,mn,mx,pct)=>new Chart(document.getElementById(id),{type:'line',data:{labels:months,datasets:[
+      {label:'Budget',data:bud(bKey||aKey),borderColor:bc,backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5},
+      {label:'Actual',data:act(aKey),borderColor:ac,backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2},
+    ]},options:lo(mn,mx,pct)});
+    const c3=mkL('tLte','lte',null,'#1565C0','rgba(21,101,192,0.35)',5,18,true);
+    const c4=mkL('tEts','ets',null,'#29B6F6','rgba(41,182,246,0.35)',75,100,true);
+    const c5=new Chart(document.getElementById('tOutcomes'),{type:'line',data:{labels:months,datasets:[
+      {label:'Comp budget',data:bud('completion'),borderColor:'rgba(46,125,50,0.3)',backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5},
+      {label:'ETC budget', data:bud('etc'),       borderColor:'rgba(230,81,0,0.3)', backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5},
+      {label:'Completion',data:act('completion'),borderColor:'#2e7d32',backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2},
+      {label:'ETC',       data:act('etc'),       borderColor:'#e65100',backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2},
+    ]},options:lo(60,100,true)});
+    const c6=new Chart(document.getElementById('tCapUtil'),{type:'line',data:{labels:months,datasets:[
+      {label:'Budget',data:bud('capUtil'),borderColor:'rgba(21,101,192,0.35)',backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5},
+      {label:'Actual',data:act('capUtil'),borderColor:'#1565C0',backgroundColor:'rgba(21,101,192,0.07)',fill:true,tension:0.3,pointRadius:3,borderWidth:2},
+    ]},options:lo(0,85,true)});
+    const c7=new Chart(document.getElementById('tClassStarts'),{type:'bar',data:{labels:months,datasets:[
+      {label:'Budget',data:bud('classStarts'),backgroundColor:'rgba(21,101,192,0.2)',borderRadius:3},
+      {label:'Actual',data:act('classStarts'),backgroundColor:'#1565C0',borderRadius:3},
+    ]},options:{...lo(null,null,false),plugins:{legend:{display:false}}}});
+    const c8=new Chart(document.getElementById('tSpc'),{type:'line',data:{labels:months,datasets:[
+      {label:'Budget',data:bud('studPerClass'),borderColor:'rgba(21,101,192,0.35)',backgroundColor:'transparent',borderDash:[4,3],tension:0.3,pointRadius:2,borderWidth:1.5},
+      {label:'Actual',data:act('studPerClass'),borderColor:'#1565C0',backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2},
+    ]},options:lo(null,null,false)});
+    charts.push(c1,c2,c3,c4,c5,c6,c7,c8);
+  }
+}
+
+// ─── MAIN RENDER ─────────────────────────────────────────────────────────────
+function render(){
+  charts.forEach(c=>{try{c.destroy();}catch(e){}});
+  charts=[];
+  const months = sel.length ? sel : [MONTHS[MONTHS.length-1]];
+  const m = months[months.length-1];
+  document.getElementById('hperiod').textContent = months.length===1 ? m : months[0]+'  →  '+m;
+  buildHealthStrip(months);
+  const dash = document.getElementById('dash');
+  dash.innerHTML = view==='single' ? renderSingle(months) : view==='trend' ? renderTrend(months) : renderTable(months);
+  requestAnimationFrame(()=>renderCharts(months));
+}
+
+// ─── CONTROLS ────────────────────────────────────────────────────────────────
+function buildToggles(){
+  document.getElementById('mtoggles').innerHTML = MONTHS.map((m,i)=>{
+    const s=sel.includes(m); const lat=i===MONTHS.length-1;
+    return `<button class="mtoggle${s?' sel':''}${lat?' latest':''}" onclick="toggleM('${m}')">${m.replace(' ',' ')}</button>`;
   }).join('');
 }
-
-function attemptRegrade(){
-  const pin = document.getElementById('regrade-pin').value;
-  if(pin !== '5901'){
-    showToast('Incorrect PIN', 'warning');
-    return;
-  }
-  const p = document.getElementById('platform-sel').value;
-  const y = document.getElementById('year-sel').value;
-  const q = document.getElementById('q-sel').value;
-  // bypass lock and open
-  state.platform = p;
-  state.year = y;
-  state.quarter = q;
-  loadExisting(p, y, q).then(existing => {
-    if(existing){
-      state.scores = existing.scores || {};
-      state.comments = existing.comments || {};
-    }
-    state.submitted = false;
-    document.getElementById('locked-note').style.display = 'none';
-    document.getElementById('setup-screen').classList.add('hidden');
-    document.getElementById('scorecard-wrap').classList.remove('hidden');
-    document.getElementById('action-bar').classList.remove('hidden');
-    document.getElementById('quarter-badge').textContent = `${q} ${y}`;
-    document.getElementById('sc-platform-name').textContent = p;
-    document.getElementById('sc-quarter-tag').textContent = `${q} ${y} · LBS Scorecard`;
-    document.getElementById('copy-prior-btn').style.display = 'none';
-    renderCatSummary();
-    renderSections();
-    refreshTotals();
-    showToast('Scorecard unlocked for regrading');
-  });
+function toggleM(m){
+  if(sel.includes(m)){ if(sel.length>1) sel=sel.filter(x=>x!==m); }
+  else { sel.push(m); sel.sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b)); }
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  buildToggles(); render();
+}
+function setPreset(p,btn){
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(p==='latest')  sel=[MONTHS[MONTHS.length-1]];
+  else if(p==='q1fy26') sel=MONTHS.filter(m=>['Jan 2026','Feb 2026','Mar 2026'].includes(m));
+  else if(p==='h2fy25') sel=MONTHS.filter(m=>['Jul 2025','Aug 2025','Sep 2025','Oct 2025','Nov 2025','Dec 2025'].includes(m));
+  else if(p==='ytd')    sel=MONTHS.filter(m=>m.includes('2026'));
+  else sel=[...MONTHS];
+  buildToggles(); render();
+}
+function setView(v){
+  view=v;
+  ['vSingle','vTrend','vTable'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById(v==='single'?'vSingle':v==='trend'?'vTrend':'vTable').classList.add('active');
+  render();
 }
 
-function copyPriorScores(){
-  if(!Object.keys(state.priorScores).length){
-    showToast('No prior quarter scores available', 'warning');
-    return;
-  }
-  state.scores = { ...state.priorScores };
-  document.getElementById('copy-prior-btn').style.display = 'none';
-  renderSections();
-  refreshTotals();
-  showToast(`${state.priorPeriod} scores copied — adjust any that have changed`);
-}
-
-function showToast(msg, type=''){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast${type?' '+type:''} show`;
-  setTimeout(()=>t.classList.remove('show'), 3200);
-}
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildToggles();
+render();
 </script>
 </body>
 </html>
